@@ -3,12 +3,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const CardComponent = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/modelo")
+      .get(`${apiUrl}/modelo`)
       .then((response) => setData(response.data))
       .catch((error) => console.error("Error al cargar usuarios:", error));
   }, []);
@@ -40,7 +41,7 @@ const CardComponent = () => {
                           <figure className="image-container">
                             <a href="#" title={item.name}>
                               <img
-                                src={`http://localhost:4000${item.avatar}`}
+                                src={`${apiUrl}${item.avatar}`}
                                 className="tab-image"
                                 alt={item.name}
                               />

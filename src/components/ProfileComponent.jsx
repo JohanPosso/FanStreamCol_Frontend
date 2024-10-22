@@ -4,6 +4,7 @@ import axios from "axios";
 import "./ProfileComponent.css"; // Asegúrate de importar tus estilos
 
 const ProfileComponent = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const { id } = useParams();
   const [profileData, setProfileData] = useState(null);
   const [mediaFiles, setMediaFiles] = useState([]);
@@ -15,7 +16,7 @@ const ProfileComponent = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:4000/modelo")
+      .get(`${apiUrl}/modelo`)
       .then((response) => {
         setProfileData(response.data);
         setLoading(false);
@@ -30,7 +31,7 @@ const ProfileComponent = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:4000/${id}/photos`)
+      .get(`${apiUrl}/${id}/photos`)
       .then((response) => {
         setMediaFiles(response.data);
         setLoading(false);
@@ -82,7 +83,7 @@ const ProfileComponent = () => {
         <>
           <div className="profile-header">
             <div className="profile-picture">
-              <img src={`http://localhost:4000${user.avatar}`} alt="Perfil" />
+              <img src={`${apiUrl}${user.avatar}`} alt="Perfil" />
             </div>
             <div className="profile-info">
               <h2>
