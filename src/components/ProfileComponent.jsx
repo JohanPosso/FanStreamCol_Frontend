@@ -26,7 +26,7 @@ const ProfileComponent = () => {
         setError("Failed to load profile data.");
         setLoading(false);
       });
-  }, []);
+  }, [apiUrl]);
 
   useEffect(() => {
     setLoading(true);

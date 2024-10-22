@@ -39,6 +39,7 @@ const HomeComponent = () => {
                           </div>
                           <div className="img-wrapper col-md-5">
                             <img
+                              alt="img"
                               src="images/img2.png"
                               className="img-fluid"
                             ></img>
@@ -94,7 +95,7 @@ const HomeComponent = () => {
                       <img
                         style={{ width: "87%" }}
                         src="images/img1.png"
-                        alt=""
+                        alt="img"
                       />
                     </div>
                   </div>

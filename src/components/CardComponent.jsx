@@ -12,7 +12,7 @@ const CardComponent = () => {
       .get(`${apiUrl}/modelo`)
       .then((response) => setData(response.data))
       .catch((error) => console.error("Error al cargar usuarios:", error));
-  }, []);
+  }, [apiUrl]);
 
   return (
     <section className="py-5">
