@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./ProfileComponent.css"; // Asegúrate de importar tus estilos
-
 const ProfileComponent = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { id } = useParams();
@@ -95,7 +94,8 @@ const ProfileComponent = () => {
                 <span>3,757 Likes</span>
               </div>
               <div className="profile-bio">
-                <p>Entrepreneur</p>
+                <button className="btn btn-primary">Seguir</button>
+
                 <p>{user.instagram}</p>
                 <div className="profile-links">
                   <a
