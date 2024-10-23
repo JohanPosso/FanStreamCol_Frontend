@@ -519,7 +519,7 @@ gap: 25px;
   text-align: center;
 }
 .product-item figure img {
-  max-height: 270px;
+  /* max-height: 270px; */
   height: auto;
 }
 .product-item .btn-wishlist {
