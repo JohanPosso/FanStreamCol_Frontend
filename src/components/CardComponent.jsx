@@ -39,13 +39,11 @@ const CardComponent = () => {
                       >
                         <div className="product-item">
                           <figure className="image-container">
-                            <a href="#" title={item.name}>
-                              <img
-                                src={`${apiUrl}${item.avatar}`}
-                                className="tab-image"
-                                alt={item.name}
-                              />
-                            </a>
+                            <img
+                              src={`${apiUrl}${item.avatar}`}
+                              className="tab-image"
+                              alt={item.name}
+                            />
                           </figure>
                           <h3>
                             {item.name} {item.lastname}

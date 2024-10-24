@@ -7,7 +7,6 @@ import { Tooltip } from "primereact/tooltip";
 import { Tag } from "primereact/tag";
 import { Dropdown } from "primereact/dropdown";
 import axios from "axios";
-
 export default function TemplateDemo() {
   const toast = useRef(null);
   const [totalSize, setTotalSize] = useState(0);
@@ -45,13 +44,12 @@ export default function TemplateDemo() {
     formData.append("file", files[0]); // Solo un archivo, ajusta si es necesario para múltiples archivos
     formData.append("modeloId", selectedUser); // Añadir el modeloId al cuerpo de la solicitud
     try {
-      const response = await axios.post(`${apiUrl}/upload-photo`, formData, {
+      await axios.post(`${apiUrl}/upload-photo`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      console.log("Archivo subido exitosamente:", response.data);
       toast.current.show({
         severity: "success",
         summary: "Éxito",
@@ -156,7 +154,10 @@ export default function TemplateDemo() {
 
   const emptyTemplate = () => {
     return (
-      <div className="flex align-items-center flex-column">
+      <div
+        className="flex align-items-center flex-column"
+        style={{ display: "flex", alignItems: "center" }}
+      >
         <i
           className="pi pi-image mt-3 p-5"
           style={{
