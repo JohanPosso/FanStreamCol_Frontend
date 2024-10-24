@@ -262,7 +262,7 @@ export default function ProductsDemo() {
               header="Image"
               body={(rowData) => (
                 <img
-                  src={`http://localhost:4000${rowData.avatar}`}
+                  src={`${apiUrl}${rowData.avatar}`}
                   alt={rowData.name}
                   className="shadow-2 border-round"
                   style={{ width: "64px" }}
