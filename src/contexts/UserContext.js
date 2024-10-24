@@ -26,6 +26,8 @@ export const UserProvider = ({ children }) => {
   // Función para verificar si el usuario es administrador
   const isAdmin = () => user?.role === "admin";
 
+  const isUser = () => user.role === "user" || user.role === "admin";
+
   // Función para iniciar sesión
   const login = (userData) => {
     setUser(userData);
@@ -40,7 +42,7 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, isLoggedIn, isAdmin, login, logout, loading }}
+      value={{ user, isLoggedIn, isAdmin, login, logout, isUser, loading }}
     >
       {children}
     </UserContext.Provider>
