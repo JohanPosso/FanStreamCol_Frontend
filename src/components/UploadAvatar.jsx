@@ -54,7 +54,7 @@ export default function TemplateDemo() {
     uploadData.append("avatar", formData.avatar);
 
     try {
-      const response = await axios.post(`${apiUrl}/crearmodelo`, uploadData, {
+      await axios.post(`${apiUrl}/crearmodelo`, uploadData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

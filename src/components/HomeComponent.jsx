@@ -1,9 +1,7 @@
-import Headercomponent from "./HeaderComponent";
 import CardComponent from "./CardComponent";
 const HomeComponent = () => {
   return (
     <div>
-      <Headercomponent />
       <section
         className="py-3"
         // style="background-image: url('images/background-pattern.jpg');background-repeat: no-repeat;background-size: cover;"
@@ -13,6 +11,62 @@ const HomeComponent = () => {
         }}
       >
         <div className="container-fluid">
+          <div className="row ">
+            <div className="d-flex  justify-content-center justify-content-sm-between align-items-center">
+              <nav className="main-menu d-flex navbar navbar-expand-lg">
+                <button
+                  className="navbar-toggler"
+                  type="button"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#offcanvasNavbar"
+                  aria-controls="offcanvasNavbar"
+                >
+                  <span className="navbar-toggler-icon"></span>
+                </button>
+
+                <div
+                  className="offcanvas offcanvas-end"
+                  tabIndex="-1"
+                  id="offcanvasNavbar"
+                  aria-labelledby="offcanvasNavbarLabel"
+                >
+                  <div className="offcanvas-header justify-content-center">
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="offcanvas"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+
+                  <div className="offcanvas-body">
+                    <ul className="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
+                      <li className="nav-item active">
+                        <a href="#women" className="nav-link">
+                          Women
+                        </a>
+                      </li>
+                      <li className="nav-item dropdown">
+                        <a href="#men" className="nav-link">
+                          Men
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a href="#kids" className="nav-link">
+                          Kids
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a href="#accessories" className="nav-link">
+                          Accessories
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </nav>
+            </div>
+          </div>
           <div className="row">
             <div className="col-md-12">
               <div className="banner-blocks">
