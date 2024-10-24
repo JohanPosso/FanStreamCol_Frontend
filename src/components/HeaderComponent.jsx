@@ -46,7 +46,9 @@ const HeaderComponent = () => {
 
             <ul className="d-flex justify-content-end list-unstyled m-0">
               <li>
-                <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
+                <Link to="/admin">
+                  <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
+                </Link>
               </li>
               <li>
                 <button

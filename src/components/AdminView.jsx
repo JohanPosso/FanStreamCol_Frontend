@@ -9,19 +9,19 @@ const AdminEndpoints = () => {
   // Lista de endpoints con título, descripción y la ruta a la que deben navegar
   const endpoints = [
     {
-      title: "Crear Modelo",
+      title: "Ver modelos",
       description: "Sube y administra las fotos del sistema.",
-      route: "/upload-modelo",
+      route: "/view-model",
     },
     {
-      title: "Subir informacion de modelos",
+      title: "Subir foto a modelos",
       description: "Administra los usuarios de la plataforma.",
       route: "/upload-photos",
     },
     {
-      title: "Settings",
-      description: "Configura las opciones avanzadas del sistema.",
-      route: "/settings",
+      title: "Ver usuarios",
+      description: "Listado de todos los usuarios almacenados en el sistema",
+      route: "/users",
     },
     {
       title: "View Reports",

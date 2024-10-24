@@ -71,7 +71,13 @@ const LoginComponent = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundImage: `url('/onlycol/public/images/background.webp')`,
+        backgroundSize: "cover",
+        height: "100vh",
+      }}
+    >
       <Toast ref={toast} />
       <div className="section">
         <div className="container">
@@ -95,6 +101,7 @@ const LoginComponent = () => {
                     <div className={`card-front ${isLogin ? "" : "d-none"}`}>
                       <div className="center-wrap">
                         <div className="section text-center">
+                          <img width="100px%" src="logo.png" alt="" />
                           <h4 className="mb-4 pb-3">Log In</h4>
                           <div className="form-group">
                             <input
@@ -123,11 +130,6 @@ const LoginComponent = () => {
                           <button onClick={handleLogin} className="btn mt-4">
                             submit
                           </button>
-                          <p className="mb-0 mt-4 text-center">
-                            <a href="#0" className="link">
-                              Forgot your password?
-                            </a>
-                          </p>
                         </div>
                       </div>
                     </div>
