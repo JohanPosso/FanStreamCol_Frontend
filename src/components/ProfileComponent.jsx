@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import ReactPlayer from "react-player";
-import ModalImage from "react-modal-image";
 import "./ProfileComponent.css";
 
 const ProfileComponent = () => {
@@ -12,6 +11,8 @@ const ProfileComponent = () => {
   const [mediaFiles, setMediaFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -51,6 +52,27 @@ const ProfileComponent = () => {
     const videoExtensions = [".mp4", ".mov", ".avi", ".mkv"];
     return videoExtensions.some((ext) =>
       file.ph_reference.toLowerCase().endsWith(ext)
+    );
+  };
+
+  const openModal = (index) => {
+    setCurrentImageIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex < mediaFiles.length - 1 ? prevIndex + 1 : 0
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : mediaFiles.length - 1
     );
   };
 
@@ -112,17 +134,42 @@ const ProfileComponent = () => {
                       controls
                     />
                   ) : (
-                    <ModalImage
-                      small={media.ph_reference}
-                      large={media.ph_reference}
+                    <img
+                      src={media.ph_reference}
                       alt={`Post ${index + 1}`}
-                      className="post-image modal-image" // Añade la clase aquí
+                      className="post-image"
+                      onClick={() => openModal(index)}
                     />
                   )}
                 </div>
               ))
             )}
           </div>
+          {isModalOpen && (
+            <div className="modal" onClick={closeModal}>
+              <div
+                className="modal-content"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <img
+                  src={mediaFiles[currentImageIndex].ph_reference}
+                  alt={`Post ${currentImageIndex + 1}`}
+                  className="modal-image"
+                />
+                <div className="modal-controls">
+                  <button onClick={prevImage} className="modal-button">
+                    Prev
+                  </button>
+                  <button onClick={nextImage} className="modal-button">
+                    Next
+                  </button>
+                  <button onClick={closeModal} className="close-button">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
