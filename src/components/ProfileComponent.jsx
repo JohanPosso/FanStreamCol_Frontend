@@ -126,13 +126,15 @@ const ProfileComponent = () => {
               mediaFiles.map((media, index) => (
                 <div className="media-container" key={index}>
                   {isVideoFile(media) ? (
-                    <ReactPlayer
-                      url={media.ph_reference}
-                      className="post-video"
-                      width="100%"
-                      height="auto"
-                      controls
-                    />
+                    <div className="video-wrapper">
+                      <ReactPlayer
+                        url={media.ph_reference}
+                        className="post-video"
+                        width="100%"
+                        height="100%"
+                        controls
+                      />
+                    </div>
                   ) : (
                     <img
                       src={media.ph_reference}
