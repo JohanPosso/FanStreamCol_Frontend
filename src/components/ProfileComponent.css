@@ -1,39 +1,62 @@
-.container-profile {
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  /* margin: 20px; */
 }
 
-.profile-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+.modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  margin: auto; /* Centramos el contenido del modal */
 }
 
-.profile-picture img {
-  width: 100px; /* Ajusta el tamaño del perfil según tus necesidades */
-  height: 100px; /* Ajusta el tamaño del perfil según tus necesidades */
-  border-radius: 50%; /* Redondear la imagen del perfil */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
 }
 
-.post-grid {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(200px, 1fr)
-  ); /* Cambia el tamaño mínimo según tus necesidades */
-  gap: 10px;
-  width: 100%; /* Asegura que la cuadrícula use todo el ancho disponible */
+.modal-image {
+  max-width: 300px; /* Ajusta este valor según sea necesario */
+  max-height: 300px; /* Ajusta este valor según sea necesario */
+  width: auto; /* Para que la imagen se ajuste automáticamente */
+  height: auto; /* Para que la imagen se ajuste automáticamente */
+  object-fit: cover; /* Mantener la relación de aspecto */
 }
 
-.media-container {
-  overflow: hidden; /* Para evitar que el contenido desborde el contenedor */
+.modal-video {
+  width: 100%;
+  height: auto;
 }
+.__react_modal_image__modal_content {
+  object-fit: cover;
+  width: 50% !important;
+  height: 90% !important;
+  margin-top: 10px;
+  justify-self: center;
+}
+/* Estilos específicos para dispositivos móviles */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 80%; /* Ajustar el tamaño del modal */
+    height: auto; /* Permitir que la altura se ajuste automáticamente */
+  }
 
-.post-image,
-.post-video {
-  width: 100%; /* Ocupa el ancho completo del contenedor */
-  height: 200px; /* Altura fija para las imágenes y videos */
-  object-fit: cover; /* Para mantener la relación de aspecto y cubrir el contenedor */
+  .__react_modal_image__modal_content {
+    object-fit: cover; /* Mantener la relación de aspecto de la imagen */
+    width: 100% !important; /* Asegurarnos de que ocupe todo el ancho */
+    height: 90% !important; /* Permitir que la altura se ajuste automáticamente */
+    margin-top: 70px; /* Reducir el margen superior para móviles */
+  }
 }

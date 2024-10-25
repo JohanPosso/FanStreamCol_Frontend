@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import "./ProfileComponent.css"; // Asegúrate de importar tus estilos
+import ReactPlayer from "react-player";
+import ModalImage from "react-modal-image";
+import "./ProfileComponent.css";
+
 const ProfileComponent = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { id } = useParams();
   const [profileData, setProfileData] = useState(null);
   const [mediaFiles, setMediaFiles] = useState([]);
-  // const [modalOpen, setModalOpen] = useState(false);
-  // const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -46,27 +47,6 @@ const ProfileComponent = () => {
     ? profileData.find((e) => e.id === Number(id))
     : null;
 
-  // const openModal = (index) => {
-  //   setCurrentMediaIndex(index);
-  //   setModalOpen(true);
-  // };
-
-  // const closeModal = () => {
-  //   setModalOpen(false);
-  // };
-
-  // const goToNextMedia = () => {
-  //   setCurrentMediaIndex((prevIndex) =>
-  //     prevIndex === mediaFiles.length - 1 ? 0 : prevIndex + 1
-  //   );
-  // };
-
-  // const goToPrevMedia = () => {
-  //   setCurrentMediaIndex((prevIndex) =>
-  //     prevIndex === 0 ? mediaFiles.length - 1 : prevIndex - 1
-  //   );
-  // };
-
   const isVideoFile = (file) => {
     const videoExtensions = [".mp4", ".mov", ".avi", ".mkv"];
     return videoExtensions.some((ext) =>
@@ -82,7 +62,11 @@ const ProfileComponent = () => {
         <>
           <div className="profile-header">
             <div className="profile-picture">
-              <img src={`${apiUrl}${user.avatar}`} alt="Perfil" />
+              <img
+                className="profile-picture"
+                src={`${apiUrl}${user.avatar}`}
+                alt="Perfil"
+              />
             </div>
             <div className="profile-info">
               <h2>
@@ -95,7 +79,6 @@ const ProfileComponent = () => {
               </div>
               <div className="profile-bio">
                 <button className="btn btn-primary">Seguir</button>
-
                 <p>{user.instagram}</p>
                 <div className="profile-links">
                   <a
@@ -121,19 +104,19 @@ const ProfileComponent = () => {
               mediaFiles.map((media, index) => (
                 <div className="media-container" key={index}>
                   {isVideoFile(media) ? (
-                    <video
-                      src={media.ph_reference}
-                      controls
+                    <ReactPlayer
+                      url={media.ph_reference}
                       className="post-video"
-                      preload="metadata"
-                      // onClick={() => openModal(index)}
+                      width="100%"
+                      height="auto"
+                      controls
                     />
                   ) : (
-                    <img
-                      src={media.ph_reference}
+                    <ModalImage
+                      small={media.ph_reference}
+                      large={media.ph_reference}
                       alt={`Post ${index + 1}`}
-                      className="post-image"
-                      // onClick={() => openModal(index)}
+                      className="post-image modal-image" // Añade la clase aquí
                     />
                   )}
                 </div>
