@@ -983,6 +983,11 @@ gap: 25px;
     height: 150px !important;
     object-fit: cover;
   }
+  /* .post-video {
+    width: 100% !important;
+    height: 150px !important;
+    object-fit: cover;
+  } */
 }
 .profile-info {
   flex-grow: 1;
@@ -1047,3 +1052,8 @@ gap: 25px;
   height: 300px;
   object-fit: cover;
 }
+/* .post-video {
+  width: 100% !important;
+  height: 300px !important;
+  object-fit: cover;
+} */

@@ -222,7 +222,7 @@ export default function TemplateDemo() {
         uploadHandler={handleUpload}
         multiple
         accept="image/*, video/*"
-        maxFileSize={5000000}
+        maxFileSize={52428800}
         onSelect={onTemplateSelect}
         onError={onTemplateClear}
         onClear={onTemplateClear}
