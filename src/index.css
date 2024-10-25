@@ -969,6 +969,7 @@ gap: 25px;
   height: 150px;
   border-radius: 50%;
   border: 2px solid #ddd;
+  object-fit: cover;
 }
 .profile-info {
   flex-grow: 1;

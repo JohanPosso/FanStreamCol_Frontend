@@ -30,25 +30,21 @@ const CardComponent = () => {
                   role="tabpanel"
                   aria-labelledby="nav-all-tab"
                 >
-                  <div className="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4">
+                  <div className="product-grid">
                     {data.map((item) => (
                       <div
                         key={item.id}
-                        className="col"
+                        className="product-item"
                         onClick={() => navigate(`/profile/${item.id}`)}
                       >
-                        <div className="product-item">
-                          <figure className="image-container">
-                            <img
-                              src={`${apiUrl}${item.avatar}`}
-                              className="tab-image"
-                              alt={item.name}
-                            />
-                          </figure>
-                          <h3>
-                            {item.name} {item.lastname}
-                          </h3>
-                        </div>
+                        <img
+                          src={`${apiUrl}${item.avatar}`}
+                          className="tab-image"
+                          alt={item.name}
+                        />
+                        <h3 className="product-name">
+                          {item.name} {item.lastname}
+                        </h3>
                       </div>
                     ))}
                   </div>
@@ -58,33 +54,42 @@ const CardComponent = () => {
           </div>
         </div>
       </div>
+
       <style jsx>{`
+        .product-grid {
+          display: grid;
+          grid-template-columns: repeat(
+            auto-fill,
+            minmax(200px, 1fr)
+          ); /* Ajusta el tamaño mínimo según lo necesario */
+          gap: 15px; /* Espaciado entre las tarjetas */
+          padding: 0; /* Elimina el padding alrededor de la grilla */
+        }
+
         .product-item {
           text-align: center;
           cursor: pointer;
-          margin-bottom: 20px;
-        }
-
-        .image-container {
-          width: 100%; /* Para que el contenedor ocupe todo el ancho disponible */
-          height: 300px; /* Altura fija */
-          overflow: hidden; /* Esconde las partes de la imagen que exceden el contenedor */
           border-radius: 8px; /* Bordes redondeados */
-          display: flex; /* Usar flexbox para centrar la imagen */
-          justify-content: center; /* Centra horizontalmente */
-          align-items: center; /* Centra verticalmente */
-          background-color: #f0f0f0; /* Color de fondo para el contenedor */
-        }
-
-        .tab-image {
-          max-width: 100%; /* Mantiene la imagen dentro del ancho del contenedor */
-          max-height: 100%; /* Asegura que la imagen no sobrepase la altura del contenedor */
-          object-fit: contain; /* Mantiene la proporción de la imagen */
+          overflow: hidden; /* Evita que las imágenes salgan del contenedor */
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil para las tarjetas */
           transition: transform 0.2s; /* Suaviza el efecto de escalado */
         }
 
-        .tab-image:hover {
-          transform: scale(1.05); /* Efecto de escalado al pasar el ratón */
+        .product-item:hover {
+          transform: scale(1.03); /* Efecto de escalado al pasar el ratón */
+        }
+
+        .tab-image {
+          width: 100%; /* Mantiene la imagen dentro del ancho del contenedor */
+          height: auto; /* Mantiene la relación de aspecto de la imagen */
+          object-fit: cover; /* Ajusta la imagen manteniendo su proporción */
+          transition: transform 0.2s; /* Suaviza el efecto de escalado */
+        }
+
+        .product-name {
+          margin: 10px 0 0; /* Espaciado entre el nombre y la imagen */
+          font-size: 1.1rem; /* Tamaño de fuente más grande para los nombres */
+          color: #333; /* Color del texto */
         }
       `}</style>
     </section>

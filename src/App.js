@@ -17,6 +17,7 @@ import UserRoute from "./components/UserRoute";
 import AdminEndpoints from "./components/AdminView";
 import ProductsDemo from "./components/ModeloList";
 import UserTlabe from "./components/UsersList";
+import VideoView from "./components/VideoView";
 // Importaciones de PrimeReact
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -44,6 +45,7 @@ function AppContent() {
           <Route path="/home" element={<HomeComponent />} />
           <Route path="/profile/:id" element={<ProfileComponent />} />
         </Route>
+        <Route path="/video/:videoId" element={<VideoView />} />
       </Routes>
     </div>
   );
