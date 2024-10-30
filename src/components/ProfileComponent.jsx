@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import ReactPlayer from "react-player";
 import "./ProfileComponent.css";
+import { Button } from "primereact/button"; // Importa el componente Button de PrimeReact
 
 const ProfileComponent = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -13,6 +14,7 @@ const ProfileComponent = () => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     setLoading(true);
@@ -76,6 +78,16 @@ const ProfileComponent = () => {
     );
   };
 
+  const filteredMediaFiles = mediaFiles.filter((media) => {
+    if (filter === "photos") {
+      return !isVideoFile(media);
+    }
+    if (filter === "videos") {
+      return isVideoFile(media);
+    }
+    return true; // Para 'all'
+  });
+
   return (
     <div className="container-profile">
       {loading && <p>Loading...</p>}
@@ -86,7 +98,7 @@ const ProfileComponent = () => {
             <div className="profile-picture">
               <img
                 className="profile-picture"
-                src={`${apiUrl}${user.avatar}`}
+                src={`${user.avatar}`}
                 alt="Perfil"
               />
             </div>
@@ -95,35 +107,57 @@ const ProfileComponent = () => {
                 {user.name} {user.lastname}
               </h2>
               <div className="profile-stats">
-                <span>5,498 posts</span>
+                <span>{mediaFiles.length} posts</span>
                 <span>25.3M followers</span>
                 <span>3,757 Likes</span>
               </div>
               <div className="profile-bio">
-                <button className="btn btn-primary">Seguir</button>
+                <button className="btn btn-primary">Likes</button>
                 <p>{user.instagram}</p>
                 <div className="profile-links">
                   <a
-                    href="https://linktr.ee/bellathornedab"
+                    href={user.otraredsocial}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    linktr.ee/bellathornedab
+                    {user.otraredsocial}
                   </a>
                 </div>
               </div>
             </div>
           </div>
           <div className="tabs">
-            <div>ALL</div>
-            <div>PHOTOS</div>
-            <div>VIDEOS</div>
+            {/* Usando componentes de PrimeReact para botones */}
+            <Button
+              label="All"
+              style={{ background: "none" }}
+              className={`filter-button ${
+                filter === "all" ? "active" : ""
+              } btn`}
+              onClick={() => setFilter("all")}
+            />
+            <Button
+              label="Photos"
+              style={{ background: "none" }}
+              className={`filter-button ${
+                filter === "photos" ? "active" : ""
+              } btn`}
+              onClick={() => setFilter("photos")}
+            />
+            <Button
+              label="Videos"
+              style={{ background: "none" }}
+              className={`filter-button ${
+                filter === "videos" ? "active" : ""
+              } btn`}
+              onClick={() => setFilter("videos")}
+            />
           </div>
           <div className="post-grid">
-            {mediaFiles.length === 0 ? (
+            {filteredMediaFiles.length === 0 ? (
               <p>No media files available.</p>
             ) : (
-              mediaFiles.map((media, index) => (
+              filteredMediaFiles.map((media, index) => (
                 <div className="media-container" key={index}>
                   {isVideoFile(media) ? (
                     <div className="video-wrapper">
@@ -154,20 +188,26 @@ const ProfileComponent = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <img
-                  src={mediaFiles[currentImageIndex].ph_reference}
+                  src={filteredMediaFiles[currentImageIndex].ph_reference}
                   alt={`Post ${currentImageIndex + 1}`}
                   className="modal-image"
                 />
                 <div className="modal-controls">
-                  <button onClick={prevImage} className="modal-button">
-                    Prev
-                  </button>
-                  <button onClick={nextImage} className="modal-button">
-                    Next
-                  </button>
-                  <button onClick={closeModal} className="close-button">
-                    Close
-                  </button>
+                  <Button
+                    label="Prev"
+                    onClick={prevImage}
+                    className="modal-button"
+                  />
+                  <Button
+                    label="Next"
+                    onClick={nextImage}
+                    className="modal-button"
+                  />
+                  <Button
+                    label="Close"
+                    onClick={closeModal}
+                    className="close-button"
+                  />
                 </div>
               </div>
             </div>

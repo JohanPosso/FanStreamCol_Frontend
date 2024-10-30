@@ -5,70 +5,51 @@ import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Toolbar } from "primereact/toolbar";
-import { useNavigate } from "react-router-dom";
 import { Dialog } from "primereact/dialog";
+import { classNames } from "primereact/utils";
 
 export default function ProductsDemo() {
   let emptyProduct = {
-    id: null,
     name: "",
     lastname: "",
     email: "",
     password: "",
-    createdAt: "",
-    updatedAt: "",
-    RoleIdRole: null,
   };
 
   const [products, setProducts] = useState([]);
   const [productDialog, setProductDialog] = useState(false);
   const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-  const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
   const [product, setProduct] = useState(emptyProduct);
   const [selectedProducts, setSelectedProducts] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState(null);
   const toast = useRef(null);
-  const dt = useRef(null);
-  const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_API_URL;
 
-  const apiUrl = process.env.REACT_APP_API_URL; // Cambiar a la ruta correcta de tu API
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/todo`);
-        const data = await response.json();
-        setProducts(data); // Establecer los productos en el estado
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        toast.current.show({
-          severity: "error",
-          summary: "Error",
-          detail: "No se pudieron cargar los productos",
-          life: 3000,
-        });
-      }
-    };
-
-    fetchProducts();
-  }, [apiUrl]);
-
-  const getRoleName = (roleId) => {
-    switch (roleId) {
-      case 1:
-        return "Admin";
-      case 2:
-        return "User";
-      case 3:
-        return "Invited";
-      default:
-        return "Unknown";
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/todo`);
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudieron cargar los productos",
+        life: 3000,
+      });
     }
   };
 
+  useEffect(() => {
+    fetchProducts();
+  }, [apiUrl]);
+
   const openNew = () => {
-    navigate("/upload-modelo");
+    setProduct(emptyProduct);
+    setSubmitted(false);
+    setProductDialog(true);
   };
 
   const hideDialog = () => {
@@ -76,49 +57,64 @@ export default function ProductsDemo() {
     setProductDialog(false);
   };
 
-  const hideDeleteProductDialog = () => {
-    setDeleteProductDialog(false);
-  };
-
-  const hideDeleteProductsDialog = () => {
-    setDeleteProductsDialog(false);
-  };
-
-  const saveProduct = () => {
+  const saveProduct = async () => {
     setSubmitted(true);
-
     if (
       product.name.trim() &&
       product.lastname.trim() &&
-      product.email.trim()
+      product.email.trim() &&
+      (!product.id ? product.password.trim() : true) // Validar contraseña solo si se está creando un nuevo usuario
     ) {
-      let _products = [...products];
-      let _product = { ...product };
+      try {
+        let response;
+        if (product.id) {
+          response = await updateProduct(product);
+        } else {
+          response = await createProduct(product);
+        }
 
-      if (product.id) {
-        const index = findIndexById(product.id);
-        _products[index] = _product;
-        toast.current.show({
-          severity: "success",
-          summary: "Successful",
-          detail: "Product Updated",
-          life: 3000,
+        const data = await response.json();
+        setProducts((prevProducts) => {
+          if (product.id) {
+            return prevProducts.map((p) =>
+              p.id === product.id ? data.user : p
+            );
+          } else {
+            return [...prevProducts, data.user];
+          }
         });
-      } else {
-        _product.id = createId();
-        _products.push(_product);
+
+        setProductDialog(false);
+        setProduct(emptyProduct);
+
+        // Refrescar la lista de productos
+        await fetchProducts(); // Llama a la función para recargar los productos
+      } catch (error) {
+        console.error("Error guardando el usuario:", error);
         toast.current.show({
-          severity: "success",
-          summary: "Successful",
-          detail: "Product Created",
+          severity: "error",
+          summary: "Error",
+          detail: "No se pudo guardar el usuario",
           life: 3000,
         });
       }
-
-      setProducts(_products);
-      setProductDialog(false);
-      setProduct(emptyProduct);
     }
+  };
+
+  const createProduct = async (newProduct) => {
+    return await fetch(`${apiUrl}/crear`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newProduct),
+    });
+  };
+
+  const updateProduct = async (updatedProduct) => {
+    return await fetch(`${apiUrl}/update/${updatedProduct.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedProduct),
+    });
   };
 
   const editProduct = (product) => {
@@ -128,34 +124,34 @@ export default function ProductsDemo() {
 
   const confirmDeleteProduct = (product) => {
     if (product && product.id) {
-      setProduct(product); // Asegúrate de que 'product' tenga un ID válido
-      setDeleteProductDialog(true); // Muestra el diálogo de confirmación
+      setProduct(product);
+      setDeleteProductDialog(true);
     } else {
-      console.error("No product ID found for deletion."); // Mensaje de error si no hay ID
+      console.error("No product ID found for deletion.");
     }
   };
 
   const deleteProduct = async () => {
     if (product && product.id) {
-      console.log(`Deleting product with ID: ${product.id}`); // Imprime el ID para verificar
       try {
         await fetch(`${apiUrl}/delete/${product.id}`, {
           method: "DELETE",
         });
 
-        // Filtra el producto eliminado
-        let _products = products.filter((val) => val.id !== product.id);
+        const _products = products.filter((val) => val.id !== product.id);
         setProducts(_products);
         setDeleteProductDialog(false);
         setProduct(emptyProduct);
 
-        // Muestra un mensaje de éxito
         toast.current.show({
           severity: "success",
           summary: "Successful",
           detail: "Product Deleted",
           life: 3000,
         });
+
+        // Refrescar la lista de productos
+        await fetchProducts(); // Llama a la función para recargar los productos
       } catch (error) {
         console.error("Error deleting product:", error);
         toast.current.show({
@@ -166,97 +162,40 @@ export default function ProductsDemo() {
         });
       }
     } else {
-      console.error("No product ID found for deletion."); // Mensaje de error si no hay ID
+      console.error("No product ID found for deletion.");
     }
-  };
-
-  const findIndexById = (id) => {
-    let index = -1;
-
-    for (let i = 0; i < products.length; i++) {
-      if (products[i].id === id) {
-        index = i;
-        break;
-      }
-    }
-
-    return index;
-  };
-
-  const createId = () => {
-    let id = "";
-    let chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (let i = 0; i < 5; i++) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-
-    return id;
-  };
-
-  const exportCSV = () => {
-    dt.current.exportCSV();
   };
 
   const confirmDeleteSelected = () => {
-    setDeleteProductsDialog(true);
-  };
-
-  const deleteSelectedProducts = async () => {
-    try {
-      await Promise.all(
-        selectedProducts.map(async (selectedProduct) => {
-          await fetch(`${apiUrl}/delete/${selectedProduct.id}`, {
-            method: "DELETE",
-          });
-        })
-      );
-
-      let _products = products.filter((val) => !selectedProducts.includes(val));
-      setProducts(_products);
-      setDeleteProductsDialog(false);
-      setSelectedProducts(null);
-      toast.current.show({
-        severity: "success",
-        summary: "Successful",
-        detail: "Products Deleted",
-        life: 3000,
-      });
-    } catch (error) {
-      console.error("Error deleting selected products:", error);
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: "No se pudieron eliminar los productos seleccionados",
-        life: 3000,
-      });
+    if (selectedProducts && selectedProducts.length) {
+      setProduct(selectedProducts[0]); // Puedes ajustar esto para manejar múltiples selecciones si es necesario
+      setDeleteProductDialog(true);
+    } else {
+      console.error("No products selected for deletion.");
     }
   };
 
-  const leftToolbarTemplate = () => {
-    return (
-      <div className="flex flex-wrap gap-2">
-        <Button
-          label="New"
-          icon="pi pi-plus"
-          severity="success"
-          onClick={openNew}
-        />
-        <Button
-          label="Delete"
-          icon="pi pi-trash"
-          severity="danger"
-          onClick={confirmDeleteSelected}
-          disabled={!selectedProducts || !selectedProducts.length}
-        />
-      </div>
-    );
-  };
+  const leftToolbarTemplate = () => (
+    <div className="flex flex-wrap gap-2">
+      <Button
+        label="New"
+        icon="pi pi-plus"
+        severity="success"
+        onClick={openNew}
+      />
+      <Button
+        label="Delete"
+        icon="pi pi-trash"
+        severity="danger"
+        onClick={confirmDeleteSelected}
+        disabled={!selectedProducts || !selectedProducts.length}
+      />
+    </div>
+  );
 
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-      <h4 className="m-0">Usuarios</h4>
+      <h4 className="m-0">Usuarios ({products.length})</h4>
       <InputText
         type="search"
         onInput={(e) => setGlobalFilter(e.target.value)}
@@ -270,146 +209,183 @@ export default function ProductsDemo() {
       <div className="flex justify-content-center">
         <Button
           icon="pi pi-pencil"
-          className="p-button-warning"
+          className="p-button-warning mr-2"
           onClick={() => editProduct(rowData)}
           tooltip="Edit"
           tooltipOptions={{ position: "top" }}
         />
-        {/* <Button
+        <Button
           icon="pi pi-trash"
           className="p-button-danger"
-          onClick={() => confirmDeleteProduct(rowData)} // Asegúrate de que 'rowData' contenga el ID
+          onClick={() => confirmDeleteProduct(rowData)}
           tooltip="Delete"
           tooltipOptions={{ position: "top" }}
-        /> */}
+        />
       </div>
     );
+  };
+
+  const getRoleName = (roleId) => {
+    const roles = {
+      1: "Administrador",
+      2: "Usuario",
+      3: "Moderador",
+    };
+    return roles[roleId] || "Desconocido";
   };
 
   return (
     <div>
       <Toast ref={toast} />
-      <div className="">
-        <div className="card ">
-          <Toolbar
-            className="mb-4"
-            left={leftToolbarTemplate}
-            right={() => (
-              <Button
-                label="Export"
-                icon="pi pi-upload"
-                className="p-button-help"
-                onClick={exportCSV}
-              />
-            )}
-          ></Toolbar>
-
-          <DataTable
-            ref={dt}
-            value={products}
-            selection={selectedProducts}
-            onSelectionChange={(e) => setSelectedProducts(e.value)}
-            dataKey="id"
-            paginator
-            rows={10}
-            globalFilter={globalFilter}
-            header={header}
-          >
-            <Column selectionMode="multiple" exportable={false}></Column>
-            <Column field="name" header="Name" sortable></Column>
-            <Column field="lastname" header="Last Name" sortable></Column>
-            <Column field="email" header="Email" sortable></Column>
-            <Column
-              field="createdAt"
-              header="Created At"
-              sortable
-              body={(rowData) =>
-                new Date(rowData.createdAt).toLocaleDateString()
-              } // Formatea la fecha
-            ></Column>
-            <Column
-              field="updatedAt"
-              header="Updated At"
-              sortable
-              body={(rowData) =>
-                new Date(rowData.updatedAt).toLocaleDateString()
-              } // Formatea la fecha
-            ></Column>
-            <Column
-              field="RoleIdRole"
-              header="Role"
-              body={(rowData) => getRoleName(rowData.RoleIdRole)}
-              sortable
-              style={{ minWidth: "2rem" }}
-            ></Column>
-            <Column
-              header="Actions"
-              body={actionBodyTemplate}
-              exportable={false}
-            ></Column>
-          </DataTable>
-        </div>
+      <div className="card">
+        <Toolbar className="mb-4" left={leftToolbarTemplate} />
+        <DataTable
+          value={products}
+          selection={selectedProducts}
+          onSelectionChange={(e) => setSelectedProducts(e.value)}
+          dataKey="id"
+          paginator
+          rows={10}
+          globalFilter={globalFilter}
+          header={header}
+        >
+          <Column selectionMode="multiple" exportable={false}></Column>
+          <Column field="name" header="Name" sortable></Column>
+          <Column field="lastname" header="Last Name" sortable></Column>
+          <Column field="email" header="Email" sortable></Column>
+          <Column field="createdAt" header="Created At" sortable></Column>
+          <Column field="updatedAt" header="Updated At" sortable></Column>
+          <Column
+            field="RoleIdRole"
+            header="Role"
+            body={(rowData) => getRoleName(rowData?.RoleIdRole)}
+            sortable
+          />
+          <Column
+            header="Actions"
+            body={actionBodyTemplate}
+            exportable={false}
+          ></Column>
+        </DataTable>
       </div>
 
+      {/* Modal de crear/editar */}
+      <Dialog
+        visible={productDialog}
+        style={{ width: "450px" }}
+        header={product.id ? "Editar Usuario" : "Crear Usuario"}
+        modal
+        footer={
+          <>
+            <Button
+              label="Cancelar"
+              icon="pi pi-times"
+              className="p-button-text"
+              onClick={hideDialog}
+            />
+            <Button
+              label="Guardar"
+              icon="pi pi-check"
+              className="p-button-text"
+              onClick={saveProduct}
+            />
+          </>
+        }
+        onHide={hideDialog}
+      >
+        <div className="field">
+          <label htmlFor="name">Nombre</label>
+          <InputText
+            id="name"
+            value={product.name}
+            onChange={(e) => setProduct({ ...product, name: e.target.value })}
+            required
+            className={classNames({ "p-invalid": submitted && !product.name })}
+          />
+          {submitted && !product.name && (
+            <small className="p-error">El nombre es requerido.</small>
+          )}
+        </div>
+        <div className="field">
+          <label htmlFor="lastname">Apellido</label>
+          <InputText
+            id="lastname"
+            value={product.lastname}
+            onChange={(e) =>
+              setProduct({ ...product, lastname: e.target.value })
+            }
+            required
+            className={classNames({
+              "p-invalid": submitted && !product.lastname,
+            })}
+          />
+          {submitted && !product.lastname && (
+            <small className="p-error">El apellido es requerido.</small>
+          )}
+        </div>
+        <div className="field">
+          <label htmlFor="email">Correo electrónico</label>
+          <InputText
+            id="email"
+            value={product.email}
+            onChange={(e) => setProduct({ ...product, email: e.target.value })}
+            required
+            className={classNames({ "p-invalid": submitted && !product.email })}
+          />
+          {submitted && !product.email && (
+            <small className="p-error">
+              El correo electrónico es requerido.
+            </small>
+          )}
+        </div>
+        {!product.id && ( // Solo mostrar este campo si se está creando un nuevo usuario
+          <div className="field">
+            <label htmlFor="password">Contraseña</label>
+            <InputText
+              id="password"
+              value={product.password}
+              onChange={(e) =>
+                setProduct({ ...product, password: e.target.value })
+              }
+              required
+              type="password"
+              className={classNames({
+                "p-invalid": submitted && !product.password,
+              })}
+            />
+            {submitted && !product.password && (
+              <small className="p-error">La contraseña es requerida.</small>
+            )}
+          </div>
+        )}
+      </Dialog>
+
+      {/* Modal de confirmación de eliminación */}
       <Dialog
         visible={deleteProductDialog}
         style={{ width: "450px" }}
-        header="Confirm"
+        header="Confirmar"
         modal
         footer={
-          <div>
+          <>
             <Button
-              label="No"
+              label="Cancelar"
               icon="pi pi-times"
-              onClick={hideDeleteProductDialog}
-            />
-            <Button label="Yes" icon="pi pi-check" onClick={deleteProduct} />
-          </div>
-        }
-        onHide={hideDeleteProductDialog}
-      >
-        <div className="flex align-items-center justify-content-center flex-column">
-          <i
-            className="pi pi-exclamation-triangle"
-            style={{ fontSize: "2rem", marginBottom: "1rem" }}
-          />
-          {product && (
-            <span>
-              ¿Estás seguro de que quieres eliminar <b>{product.name}</b>?
-            </span>
-          )}
-        </div>
-      </Dialog>
-
-      <Dialog
-        visible={deleteProductsDialog}
-        style={{ width: "450px" }}
-        header="Confirm"
-        modal
-        footer={
-          <div>
-            <Button
-              label="No"
-              icon="pi pi-times"
-              onClick={hideDeleteProductsDialog}
+              className="p-button-text"
+              onClick={() => setDeleteProductDialog(false)}
             />
             <Button
-              label="Yes"
+              label="Confirmar"
               icon="pi pi-check"
-              onClick={deleteSelectedProducts}
+              className="p-button-text"
+              onClick={deleteProduct}
             />
-          </div>
+          </>
         }
-        onHide={hideDeleteProductsDialog}
+        onHide={() => setDeleteProductDialog(false)}
       >
-        <div className="flex align-items-center justify-content-center flex-column">
-          <i
-            className="pi pi-exclamation-triangle"
-            style={{ fontSize: "2rem", marginBottom: "1rem" }}
-          />
-          <span>
-            ¿Estás seguro de que quieres eliminar los usuarios seleccionados?
-          </span>
+        <div className="flex align-items-center justify-content-center">
+          ¿Estás seguro de que quieres eliminar este usuario?
         </div>
       </Dialog>
     </div>

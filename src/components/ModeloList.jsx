@@ -5,44 +5,46 @@ import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 import { Toolbar } from "primereact/toolbar";
 import { InputText } from "primereact/inputtext";
+import { Dialog } from "primereact/dialog";
 import { useNavigate } from "react-router-dom";
 
 export default function ProductsDemo() {
-  let emptyProduct = {
-    id: null,
-    name: "",
-    image: null,
-    description: "",
-    category: null,
-    price: 0,
-    quantity: 0,
-    rating: 0,
-    inventoryStatus: "INSTOCK",
-  };
-
   const [products, setProducts] = useState([]);
   const [productDialog, setProductDialog] = useState(false);
   const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-  const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
-  const [product, setProduct] = useState(emptyProduct);
-  const [selectedProducts, setSelectedProducts] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+
+  const emptyProduct = {
+    name: "",
+    lastname: "",
+    instagram: "",
+    otraredsocial: "",
+    avatar: "",
+  };
+
+  const [product, setProduct] = useState({
+    id: null,
+    name: "",
+    lastname: "",
+    instagram: "",
+    otraredsocial: "",
+    avatar: "",
+  });
+  const [selectedProducts, setSelectedProducts] = useState(null);
   const [globalFilter, setGlobalFilter] = useState(null);
   const toast = useRef(null);
   const dt = useRef(null);
   const navigate = useNavigate();
 
-  const apiUrl = process.env.REACT_APP_API_URL; // Cambiar a la ruta correcta de tu API
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    // Cargar los datos de la API
     const fetchProducts = async () => {
       try {
         const response = await fetch(`${apiUrl}/modelo`);
         const data = await response.json();
-        setProducts(data); // Establecer los productos en el estado
+        setProducts(data);
       } catch (error) {
-        console.error("Error fetching products:", error);
         toast.current.show({
           severity: "error",
           summary: "Error",
@@ -51,73 +53,15 @@ export default function ProductsDemo() {
         });
       }
     };
-
     fetchProducts();
   }, [apiUrl]);
 
-  const formatCurrency = (value) => {
-    return value.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
-  };
-
   const openNew = () => {
-    // setProduct(emptyProduct);
-    // setSubmitted(false);
-    // setProductDialog(true);
     navigate("/upload-modelo");
   };
 
   const hideDialog = () => {
-    setSubmitted(false);
     setProductDialog(false);
-  };
-
-  const hideDeleteProductDialog = () => {
-    setDeleteProductDialog(false);
-  };
-
-  const hideDeleteProductsDialog = () => {
-    setDeleteProductsDialog(false);
-  };
-
-  const saveProduct = () => {
-    setSubmitted(true);
-
-    if (product.name.trim()) {
-      let _products = [...products];
-      let _product = { ...product };
-
-      if (product.id) {
-        const index = findIndexById(product.id);
-        _products[index] = _product;
-        toast.current.show({
-          severity: "success",
-          summary: "Successful",
-          detail: "Product Updated",
-          life: 3000,
-        });
-      } else {
-        _product.id = createId();
-        _products.push(_product);
-        toast.current.show({
-          severity: "success",
-          summary: "Successful",
-          detail: "Product Created",
-          life: 3000,
-        });
-      }
-
-      setProducts(_products);
-      setProductDialog(false);
-      setProduct(emptyProduct);
-    }
-  };
-
-  const editProduct = (product) => {
-    setProduct({ ...product });
-    setProductDialog(true);
   };
 
   const confirmDeleteProduct = (product) => {
@@ -125,92 +69,96 @@ export default function ProductsDemo() {
     setDeleteProductDialog(true);
   };
 
-  const deleteProduct = () => {
-    let _products = products.filter((val) => val.id !== product.id);
-    setProducts(_products);
-    setDeleteProductDialog(false);
-    setProduct(emptyProduct);
-    toast.current.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "Product Deleted",
-      life: 3000,
-    });
+  const deleteProduct = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/delete-modelo/${product.id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        const _products = products.filter((val) => val.id !== product.id);
+        setProducts(_products);
+        setDeleteProductDialog(false);
+        setProduct(emptyProduct);
+        toast.current.show({
+          severity: "success",
+          summary: "Successful",
+          detail: "Producto eliminado",
+          life: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Error al eliminar el modelo:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudo eliminar el modelo",
+        life: 3000,
+      });
+    }
   };
 
-  const findIndexById = (id) => {
-    let index = -1;
+  const editProduct = (product) => {
+    setProduct(product);
+    setProductDialog(true);
+  };
 
-    for (let i = 0; i < products.length; i++) {
-      if (products[i].id === id) {
-        index = i;
-        break;
+  const saveProduct = async () => {
+    setSubmitted(true);
+
+    if (product.name.trim()) {
+      try {
+        if (product.id) {
+          // Actualiza un producto existente usando PUT
+          const response = await fetch(`${apiUrl}/edit-modelo/${product.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: product.name,
+              lastname: product.lastname,
+              instagram: product.instagram,
+              otraredsocial: product.otraredsocial,
+              avatar: product.avatar,
+            }),
+          });
+
+          if (response.ok) {
+            toast.current.show({
+              severity: "success",
+              summary: "Successful",
+              detail: "Modelo editado",
+              life: 3000,
+            });
+            // Actualiza los datos en el frontend si es necesario
+            const updatedProducts = products.map((p) =>
+              p.id === product.id ? { ...p, ...product } : p
+            );
+            setProducts(updatedProducts);
+            setProductDialog(false);
+            setProduct(emptyProduct);
+          }
+        }
+      } catch (error) {
+        console.error("Error al editar el modelo:", error);
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "No se pudo editar el modelo",
+          life: 3000,
+        });
       }
     }
-
-    return index;
-  };
-
-  const createId = () => {
-    let id = "";
-    let chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (let i = 0; i < 5; i++) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-
-    return id;
-  };
-
-  const exportCSV = () => {
-    dt.current.exportCSV();
-  };
-
-  const confirmDeleteSelected = () => {
-    setDeleteProductsDialog(true);
-  };
-
-  const deleteSelectedProducts = () => {
-    let _products = products.filter((val) => !selectedProducts.includes(val));
-    setProducts(_products);
-    setDeleteProductsDialog(false);
-    setSelectedProducts(null);
-    toast.current.show({
-      severity: "success",
-      summary: "Successful",
-      detail: "Products Deleted",
-      life: 3000,
-    });
-  };
-
-  const leftToolbarTemplate = () => {
-    return (
-      <div className="flex flex-wrap gap-2">
-        <Button
-          label="New"
-          icon="pi pi-plus"
-          severity="success"
-          onClick={openNew}
-        />
-        <Button
-          label="Delete"
-          icon="pi pi-trash"
-          severity="danger"
-          onClick={confirmDeleteSelected}
-          disabled={!selectedProducts || !selectedProducts.length}
-        />
-      </div>
-    );
   };
 
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-      <h4 className="m-0">Manage Products</h4>
+      <h4 className="m-0">Gestión de Modelos</h4>
       <InputText
         type="search"
         onInput={(e) => setGlobalFilter(e.target.value)}
-        placeholder="Search..."
+        placeholder="Buscar..."
       />
     </div>
   );
@@ -218,72 +166,164 @@ export default function ProductsDemo() {
   return (
     <div>
       <Toast ref={toast} />
-      <div className="">
-        <div className="card ">
-          <Toolbar
-            className="mb-4"
-            left={leftToolbarTemplate}
-            right={() => (
-              <Button
-                label="Export"
-                icon="pi pi-upload"
-                className="p-button-help"
-                onClick={exportCSV}
+      <div className="card">
+        <Toolbar
+          className="mb-4"
+          left={() => (
+            <Button
+              label="Nuevo"
+              icon="pi pi-plus"
+              severity="success"
+              onClick={openNew}
+            />
+          )}
+        />
+
+        <DataTable
+          ref={dt}
+          value={products}
+          selection={selectedProducts}
+          onSelectionChange={(e) => setSelectedProducts(e.value)}
+          dataKey="id"
+          paginator
+          rows={10}
+          globalFilter={globalFilter}
+          header={header}
+        >
+          <Column selectionMode="multiple" exportable={false}></Column>
+          <Column field="name" header="Nombre" sortable></Column>
+          <Column field="lastname" header="Apellido" sortable></Column>
+          <Column
+            field="avatar"
+            header="Imagen"
+            body={(rowData) => (
+              <img
+                src={`${rowData.avatar}`}
+                alt={rowData.name}
+                className="shadow-2 border-round"
+                style={{ width: "64px" }}
               />
             )}
-          ></Toolbar>
-
-          <DataTable
-            ref={dt}
-            value={products}
-            selection={selectedProducts}
-            onSelectionChange={(e) => setSelectedProducts(e.value)}
-            dataKey="id"
-            paginator
-            rows={10}
-            globalFilter={globalFilter}
-            header={header}
-          >
-            <Column selectionMode="multiple" exportable={false}></Column>
-            <Column
-              field="name"
-              header="Name"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="lastname"
-              header="LastName"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="avatar" // Cambiar al campo correcto de tu API
-              header="Image"
-              body={(rowData) => (
-                <img
-                  src={`${apiUrl}${rowData.avatar}`}
-                  alt={rowData.name}
-                  className="shadow-2 border-round"
-                  style={{ width: "64px" }}
+          ></Column>
+          <Column field="instagram" header="Instagram" sortable></Column>
+          <Column
+            field="otraredsocial"
+            header="Otra Red Social"
+            sortable
+          ></Column>
+          <Column
+            body={(rowData) => (
+              <div>
+                <Button
+                  icon="pi pi-pencil"
+                  className="p-button-rounded p-button-success mr-2"
+                  onClick={() => editProduct(rowData)}
                 />
-              )}
-            ></Column>
-            <Column
-              field="instagram"
-              header="Instagram"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-            <Column
-              field="otraredsocial"
-              header="Otra Red Social"
-              sortable
-              style={{ minWidth: "16rem" }}
-            ></Column>
-          </DataTable>
-        </div>
+                <Button
+                  icon="pi pi-trash"
+                  className="p-button-rounded p-button-warning"
+                  onClick={() => confirmDeleteProduct(rowData)}
+                />
+              </div>
+            )}
+          ></Column>
+        </DataTable>
       </div>
+
+      <Dialog
+        visible={deleteProductDialog}
+        style={{ width: "450px" }}
+        header="Confirmación"
+        modal
+        footer={() => (
+          <div>
+            <Button
+              label="No"
+              icon="pi pi-times"
+              className="p-button-text"
+              onClick={() => setDeleteProductDialog(false)}
+            />
+            <Button
+              label="Sí"
+              icon="pi pi-check"
+              className="p-button-text"
+              onClick={deleteProduct}
+            />
+          </div>
+        )}
+        onHide={() => setDeleteProductDialog(false)}
+      >
+        <div className="confirmation-content">
+          <span>¿Estás seguro de que deseas eliminar este modelo?</span>
+        </div>
+      </Dialog>
+
+      <Dialog
+        visible={productDialog}
+        style={{ width: "450px" }}
+        header="Editar Modelo"
+        modal
+        footer={() => (
+          <div>
+            <Button
+              label="Cancelar"
+              icon="pi pi-times"
+              className="p-button-text"
+              onClick={hideDialog}
+            />
+            <Button
+              label="Guardar"
+              icon="pi pi-check"
+              className="p-button-text"
+              onClick={saveProduct}
+            />
+          </div>
+        )}
+        onHide={hideDialog}
+      >
+        <div className="p-fluid">
+          <div className="p-field">
+            <label htmlFor="name">Nombre</label>
+            <InputText
+              id="name"
+              value={product.name}
+              onChange={(e) => setProduct({ ...product, name: e.target.value })}
+              required
+            />
+          </div>
+          <div className="p-field">
+            <label htmlFor="lastname">Apellido</label>
+            <InputText
+              id="lastname"
+              value={product.lastname}
+              onChange={(e) =>
+                setProduct({ ...product, lastname: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div className="p-field">
+            <label htmlFor="instagram">Instagram</label>
+            <InputText
+              id="instagram"
+              value={product.instagram}
+              onChange={(e) =>
+                setProduct({ ...product, instagram: e.target.value })
+              }
+            />
+          </div>
+          <div className="p-field">
+            <label htmlFor="otraredsocial">Otra Red Social</label>
+            <InputText
+              id="otraredsocial"
+              value={product.otraredsocial}
+              onChange={(e) =>
+                setProduct({ ...product, otraredsocial: e.target.value })
+              }
+            />
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }
