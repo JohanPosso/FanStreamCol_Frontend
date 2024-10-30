@@ -38,7 +38,7 @@ const CardComponent = () => {
                         onClick={() => navigate(`/profile/${item.id}`)}
                       >
                         <img
-                          src={`${apiUrl}${item.avatar}`}
+                          src={`${item.avatar}`}
                           className="tab-image"
                           alt={item.name}
                         />
