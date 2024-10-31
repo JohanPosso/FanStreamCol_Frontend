@@ -18,6 +18,7 @@ import AdminEndpoints from "./components/AdminView";
 import ProductsDemo from "./components/ModeloList";
 import UserTlabe from "./components/UsersList";
 import VideoView from "./components/VideoView";
+import CategoryPage from "./components/CategoryPage";
 // Importaciones de PrimeReact
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -43,6 +44,7 @@ function AppContent() {
         {/* Ruta de home, accesible para todos */}
         <Route element={<UserRoute />}>
           <Route path="/home" element={<HomeComponent />} />
+          <Route path="/category/:id" element={<CategoryPage />} />
           <Route path="/profile/:id" element={<ProfileComponent />} />
         </Route>
         <Route path="/video/:videoId" element={<VideoView />} />

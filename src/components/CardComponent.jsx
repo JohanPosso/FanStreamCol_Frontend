@@ -81,7 +81,7 @@ const CardComponent = () => {
 
         .tab-image {
           width: 100%; /* Mantiene la imagen dentro del ancho del contenedor */
-          height: auto; /* Mantiene la relación de aspecto de la imagen */
+          height: 200px; /* Mantiene la relación de aspecto de la imagen */
           object-fit: cover; /* Ajusta la imagen manteniendo su proporción */
           transition: transform 0.2s; /* Suaviza el efecto de escalado */
         }
