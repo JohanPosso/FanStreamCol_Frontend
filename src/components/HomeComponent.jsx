@@ -1,5 +1,31 @@
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Carousel } from "primereact/carousel";
+
 import CardComponent from "./CardComponent";
+import axios from "axios";
 const HomeComponent = () => {
+  const [categories, setCategories] = useState([]);
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const categoryTemplate = (item) => (
+    <Link to={`/category/${item.name}`} className="nav-link category-item">
+      <div className="category-card">
+        <img className="category-image" src={item.photo} alt={item.name} />
+        <h3 className="category-title">{item.name}</h3>
+      </div>
+    </Link>
+  );
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/categories`);
+        setCategories(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchCategories();
+  }, [apiUrl]);
   return (
     <div>
       <section
@@ -165,91 +191,26 @@ const HomeComponent = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="section-header d-flex flex-wrap justify-content-between mb-5">
-                <h2 className="section-title">Category</h2>
-
-                <div className="d-flex align-items-center">
-                  <a href="#" className="btn-link text-decoration-none">
-                    View All Categories →
-                  </a>
-                  <div className="swiper-buttons">
-                    <button className="swiper-prev category-carousel-prev btn btn-yellow">
-                      ❮
-                    </button>
-                    <button className="swiper-next category-carousel-next btn btn-yellow">
-                      ❯
-                    </button>
-                  </div>
-                </div>
+                <h2 className="section-title">Categorias</h2>
               </div>
             </div>
           </div>
           <div className="row">
             <div className="col-md-12">
-              <div className="category-carousel swiper">
-                <div className="swiper-wrapper-banner">
-                  <a
-                    href="index.html"
-                    className="nav-link category-item swiper-slide"
-                  >
-                    <img
-                      src="images/icon-vegetables-broccoli.png"
-                      alt="Category Thumbnail"
-                    ></img>
-                    <h3 className="category-title">Fruits & Veges</h3>
-                  </a>
-
-                  <a
-                    href="index.html"
-                    className="nav-link category-item swiper-slide"
-                  >
-                    <img
-                      src="images/icon-vegetables-broccoli.png"
-                      alt="Category Thumbnail"
-                    ></img>
-                    <h3 className="category-title">Fruits & Veges</h3>
-                  </a>
-                  <a
-                    href="index.html"
-                    className="nav-link category-item swiper-slide"
-                  >
-                    <img
-                      src="images/icon-vegetables-broccoli.png"
-                      alt="Category Thumbnail"
-                    ></img>
-                    <h3 className="category-title">Fruits & Veges</h3>
-                  </a>
-                  <a
-                    href="index.html"
-                    className="nav-link category-item swiper-slide"
-                  >
-                    <img
-                      src="images/icon-vegetables-broccoli.png"
-                      alt="Category Thumbnail"
-                    ></img>
-                    <h3 className="category-title">Fruits & Veges</h3>
-                  </a>
-                  <a
-                    href="index.html"
-                    className="nav-link category-item swiper-slide"
-                  >
-                    <img
-                      src="images/icon-vegetables-broccoli.png"
-                      alt="Category Thumbnail"
-                    ></img>
-                    <h3 className="category-title">Fruits & Veges</h3>
-                  </a>
-                  <a
-                    href="index.html"
-                    className="nav-link category-item swiper-slide"
-                  >
-                    <img
-                      src="images/icon-vegetables-broccoli.png"
-                      alt="Category Thumbnail"
-                    ></img>
-                    <h3 className="category-title">Fruits & Veges</h3>
-                  </a>
-                </div>
-              </div>
+              <Carousel
+                value={categories}
+                itemTemplate={categoryTemplate}
+                numVisible={6}
+                numScroll={1}
+                circular
+                // autoplayInterval={3000}
+                responsiveOptions={[
+                  { breakpoint: "1024px", numVisible: 3, numScroll: 1 },
+                  { breakpoint: "768px", numVisible: 2, numScroll: 1 },
+                  { breakpoint: "560px", numVisible: 1, numScroll: 1 },
+                ]}
+                className="category-carousel"
+              />
             </div>
           </div>
         </div>
