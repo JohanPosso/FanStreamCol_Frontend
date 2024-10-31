@@ -48,10 +48,11 @@ function AppContent() {
         </Route>
         {/* Ruta de home, accesible para usuarios */}
         <Route element={<UserRoute />}>
-          <Route path="/category/:id" element={<CategoryPage />} />
-          <Route path="/profile/:id" element={<ProfileComponent />} />
+          
         </Route>
         {/* Ruta de home, accesible para todos */}
+          <Route path="/category/:id" element={<CategoryPage />} />
+          <Route path="/profile/:id" element={<ProfileComponent />} />
         <Route path="/video/:videoId" element={<VideoView />} />
         {/* <Route path="/home" element={<HomeComponent />} />    Normalmente es asi */}
         {/* Se agrego como ruta principal mientras esta en prueba */}
