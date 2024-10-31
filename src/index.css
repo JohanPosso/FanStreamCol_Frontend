@@ -1,3 +1,61 @@
+/* AdminPage */
+.admin-endpoints {
+  padding: 2rem;
+  text-align: center;
+}
+
+.title {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas */
+  gap: 1.5rem; /* Espacio entre las tarjetas */
+}
+
+.grid-item {
+  display: flex;
+  justify-content: center;
+}
+
+.endpoint-card {
+  width: 100%;
+  height: 250px; /* Altura fija para las tarjetas */
+  border-radius: 10px;
+  transition: transform 0.2s;
+}
+
+.endpoint-card:hover {
+  transform: scale(1.05); /* Efecto de hover */
+}
+
+@media (max-width: 1200px) {
+  .grid-container {
+    grid-template-columns: repeat(
+      4,
+      1fr
+    ); /* Mantiene 4 columnas en pantallas grandes */
+  }
+}
+
+@media (max-width: 900px) {
+  .grid-container {
+    grid-template-columns: repeat(
+      2,
+      1fr
+    ); /* 2 columnas en pantallas pequeñas */
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-container {
+    grid-template-columns: 1fr; /* 1 columna en pantallas muy pequeñas */
+  }
+}
+
 /* categoryPage */
 .category-gallery {
   padding: 20px;
@@ -58,9 +116,9 @@
 }
 
 .category-image {
-  width: 150px; /* Tamaño de la imagen */
-  height: 120px;
+  height: 154px;
   object-fit: cover;
+  width: 130px;
   border-radius: 8px; /* Bordes ligeramente redondeados */
 }
 
