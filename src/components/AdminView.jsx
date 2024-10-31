@@ -9,7 +9,7 @@ const AdminEndpoints = () => {
   // Lista de endpoints con título, descripción y la ruta a la que deben navegar
   const endpoints = [
     {
-      title: "Ver modelos",
+      title: "Gestionar modelos",
       description: "Sube y administra las fotos del sistema.",
       route: "/view-model",
     },
@@ -19,14 +19,34 @@ const AdminEndpoints = () => {
       route: "/upload-photos",
     },
     {
-      title: "Ver usuarios",
-      description: "Listado de todos los usuarios almacenados en el sistema",
+      title: "Gestionar usuarios",
+      description: "Listado de todos los usuarios almacenados en el sistema.",
       route: "/users",
     },
     {
-      title: "View Reports",
+      title: "Gestionar categorías",
       description: "Visualiza los reportes generados por el sistema.",
-      route: "/reports",
+      route: "/categories",
+    },
+    {
+      title: "Subir Video",
+      description: "Permite subir un video para ser almacenado",
+      route: "/upload-video",
+    },
+    {
+      title: "Configuraciones",
+      description: "Ajusta las configuraciones del sistema.",
+      route: "/settings",
+    },
+    {
+      title: "Historial",
+      description: "Revisa el historial de acciones realizadas.",
+      route: "/history",
+    },
+    {
+      title: "Soporte",
+      description: "Contacta al soporte técnico.",
+      route: "/support",
     },
   ];
 
@@ -36,24 +56,26 @@ const AdminEndpoints = () => {
   };
 
   return (
-    <div className="p-grid p-justify-center p-align-center">
-      {endpoints.map((endpoint, index) => (
-        <div key={index} className="p-col-12 p-md-4 p-lg-3">
-          <Card
-            title={endpoint.title}
-            className="p-shadow-3"
-            subTitle={endpoint.description}
-            style={{ borderRadius: "15px", padding: "1rem" }}
-          >
-            <Button
-              label="Go"
-              icon="pi pi-arrow-right"
-              className="p-button-primary p-button-rounded"
-              onClick={() => handleNavigate(endpoint.route)}
-            />
-          </Card>
-        </div>
-      ))}
+    <div className="admin-endpoints">
+      <h2 className="title">Administración de Endpoints</h2>
+      <div className="grid-container">
+        {endpoints.map((endpoint, index) => (
+          <div key={index} className="grid-item">
+            <Card className="p-shadow-3 endpoint-card">
+              <div className="card-content">
+                <h3>{endpoint.title}</h3>
+                <p>{endpoint.description}</p>
+                <Button
+                  label="Ir"
+                  icon="pi pi-arrow-right"
+                  className="p-button-primary p-button-rounded"
+                  onClick={() => handleNavigate(endpoint.route)}
+                />
+              </div>
+            </Card>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

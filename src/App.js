@@ -19,6 +19,8 @@ import ProductsDemo from "./components/ModeloList";
 import UserTlabe from "./components/UsersList";
 import VideoView from "./components/VideoView";
 import CategoryPage from "./components/CategoryPage";
+import CategoriesDemo from "./components/CategoryList";
+import VideoUpload from "./components/UploadVideo";
 // Importaciones de PrimeReact
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -29,25 +31,31 @@ function AppContent() {
 
   return (
     <div>
-      {location.pathname !== "/" && <HeaderComponent />}
+      {/* {location.pathname !== "/" && <HeaderComponent />} Normalmente es asi */}
+      {/* Se agrego como este cambio mientras esta en prueba */}
+      {<HeaderComponent />}
       <Routes>
         {/* Ruta de login */}
-        <Route path="/" element={<LoginComponent />} />
+        {/* <Route path="/" element={<LoginComponent />} /> */}
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<AdminEndpoints />} />
           <Route path="/view-model" element={<ProductsDemo />} />
           <Route path="/upload-photos" element={<TemplateDemo />} />
           <Route path="/upload-modelo" element={<UploadAvatar />} />
           <Route path="/users" element={<UserTlabe />} />
+          <Route path="/categories" element={<CategoriesDemo />} />
+          <Route path="/upload-video" element={<VideoUpload />} />
         </Route>
-
-        {/* Ruta de home, accesible para todos */}
+        {/* Ruta de home, accesible para usuarios */}
         <Route element={<UserRoute />}>
-          <Route path="/home" element={<HomeComponent />} />
           <Route path="/category/:id" element={<CategoryPage />} />
           <Route path="/profile/:id" element={<ProfileComponent />} />
         </Route>
+        {/* Ruta de home, accesible para todos */}
         <Route path="/video/:videoId" element={<VideoView />} />
+        {/* <Route path="/home" element={<HomeComponent />} />    Normalmente es asi */}
+        {/* Se agrego como ruta principal mientras esta en prueba */}
+        <Route path="/" element={<HomeComponent />} />{" "}
       </Routes>
     </div>
   );

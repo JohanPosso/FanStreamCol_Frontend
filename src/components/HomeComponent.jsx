@@ -65,7 +65,7 @@ const HomeComponent = () => {
                     ></button>
                   </div>
 
-                  <div className="offcanvas-body">
+                  {/* <div className="offcanvas-body">
                     <ul className="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
                       <li className="nav-item active">
                         <a href="#women" className="nav-link">
@@ -88,7 +88,7 @@ const HomeComponent = () => {
                         </a>
                       </li>
                     </ul>
-                  </div>
+                  </div> */}
                 </div>
               </nav>
             </div>
@@ -102,20 +102,19 @@ const HomeComponent = () => {
                       <div className="swiper-slide">
                         <div className="row banner-content p-5">
                           <div className="content-wrapper col-md-7">
-                            <div className="categories my-3">100% natural</div>
-                            <h3 className="display-4">
-                              Fresh Smoothie & Summer Juice
-                            </h3>
+                            <div className="categories my-3">100% Gratuito</div>
+                            <h3 className="display-4">FanStream Col</h3>
                             <p>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing
-                              elit. Dignissim massa diam elementum.
+                              Estamos encantados de tenerte aquí. Antes de
+                              explorar nuestro contenido exclusivo, queremos
+                              recordarte que este sitio está destinado a adultos
+                              mayores de 18 años. Asegúrate de estar en un
+                              entorno apropiado y de cumplir con todas las
+                              regulaciones locales sobre contenido para adultos.
                             </p>
-                            <a
-                              href="#"
-                              className="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 px-4 py-3 mt-3"
-                            >
-                              Shop Now
-                            </a>
+                            <p style={{ fontWeight: "bold" }}>
+                              Siguenos en nuestras redes sociales →
+                            </p>
                           </div>
                           <div className="img-wrapper col-md-5">
                             <img
@@ -146,10 +145,24 @@ const HomeComponent = () => {
                     className="row banner-content p-5"
                   >
                     <div
-                      style={{ display: "-webkit-box" }}
+                      style={{ display: "block" }}
                       className="content-wrapper col-md-7"
                     >
-                      <h3 className="banner-title">Fruits & Vegetables</h3>
+                      <a
+                        style={{ fontSize: "13px" }}
+                        href="https://www.tiktok.com/@fanstreamcol"
+                        className="item-title"
+                        target="_blank"
+                      >
+                        <i
+                          style={{ fontSize: "32px" }}
+                          className="pi pi-tiktok"
+                        >
+                          {" "}
+                          <span> TikTok</span>
+                        </i>
+                        https://www.tiktok.com/@fanstreamcol
+                      </a>
                       <img
                         style={{ width: "87%" }}
                         src="images/img3.png"
@@ -168,10 +181,24 @@ const HomeComponent = () => {
                     className="row banner-content p-5"
                   >
                     <div
-                      style={{ display: "-webkit-box" }}
+                      style={{ display: "block" }}
                       className="content-wrapper col-md-7"
                     >
-                      <h3 className="item-title">Baked Products</h3>
+                      <a
+                        target="_blank"
+                        style={{ fontSize: "13px" }}
+                        href="https://www.facebook.com/FanStreamCol"
+                        className="item-title"
+                      >
+                        <i
+                          style={{ fontSize: "32px" }}
+                          className="pi pi-facebook"
+                        >
+                          {" "}
+                          <span> Facebook</span>
+                        </i>
+                        https://www.facebook.com/FanStreamCol
+                      </a>
                       <img
                         style={{ width: "87%" }}
                         src="images/img1.png"

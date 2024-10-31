@@ -21,7 +21,7 @@ const CardComponent = () => {
           <div className="col-md-12">
             <div className="bootstrap-tabs product-tabs">
               <div className="tabs-header d-flex justify-content-between border-bottom my-5">
-                <h3>Trending Products</h3>
+                <h3>Destacados</h3>
               </div>
               <div className="tab-content" id="nav-tabContent">
                 <div
