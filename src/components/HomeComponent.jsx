@@ -119,7 +119,7 @@ const HomeComponent = () => {
                           <div className="img-wrapper col-md-5">
                             <img
                               alt="img"
-                              src="images/img2.png"
+                              src="/images/img2.png"
                               className="img-fluid"
                             ></img>
                           </div>
@@ -152,6 +152,7 @@ const HomeComponent = () => {
                         style={{ fontSize: "13px" }}
                         href="https://www.tiktok.com/@fanstreamcol"
                         className="item-title"
+                        rel="noreferrer"
                         target="_blank"
                       >
                         <i
@@ -165,7 +166,7 @@ const HomeComponent = () => {
                       </a>
                       <img
                         style={{ width: "87%" }}
-                        src="images/img3.png"
+                        src="/images/img3.png"
                         alt=""
                       />
                     </div>
@@ -187,6 +188,7 @@ const HomeComponent = () => {
                       <a
                         target="_blank"
                         style={{ fontSize: "13px" }}
+                        rel="noreferrer"
                         href="https://www.facebook.com/FanStreamCol"
                         className="item-title"
                       >
@@ -201,7 +203,7 @@ const HomeComponent = () => {
                       </a>
                       <img
                         style={{ width: "87%" }}
-                        src="images/img1.png"
+                        src="/images/img1.png"
                         alt="img"
                       />
                     </div>
