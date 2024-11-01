@@ -96,7 +96,7 @@ const HomeComponent = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="banner-blocks">
-                <div className="banner-ad large bg-info block-1">
+                <div className=" large bg-info block-1">
                   <div className="swiper main-swiper">
                     <div className="swiper-wrapper">
                       <div className="swiper-slide">
@@ -132,10 +132,11 @@ const HomeComponent = () => {
                 </div>
 
                 <div
-                  className="banner-ad bg-success-subtle block-2"
+                  className=" bg-success-subtle block-2"
                   style={{
                     backgroundImage:
                       "url('/onlycol/public/images/images/ad-image-1.png')",
+                    overflow: "hidden",
                   }}
 
                   // style="background:url('images/ad-image-1.png') no-repeat;background-position: right bottom
@@ -144,10 +145,7 @@ const HomeComponent = () => {
                     style={{ maxHeight: "100px" }}
                     className="row banner-content p-5"
                   >
-                    <div
-                      style={{ display: "block" }}
-                      className="content-wrapper col-md-7"
-                    >
+                    <div className="content-wrapper col-md-7 div-img">
                       <a
                         style={{ fontSize: "13px" }}
                         href="https://www.tiktok.com/@fanstreamcol"
@@ -165,7 +163,7 @@ const HomeComponent = () => {
                         https://www.tiktok.com/@fanstreamcol
                       </a>
                       <img
-                        style={{ width: "87%" }}
+                        style={{ width: "80%" }}
                         src="/images/img3.png"
                         alt=""
                       />
@@ -174,17 +172,17 @@ const HomeComponent = () => {
                 </div>
 
                 <div
-                  className="banner-ad bg-danger block-3"
+                  className=" bg-danger block-3"
+                  style={{
+                    overflow: "hidden",
+                  }}
                   // style="background:url('images/ad-image-2.png') no-repeat;background-position: right bottom"
                 >
                   <div
                     style={{ maxHeight: "100px" }}
                     className="row banner-content p-5"
                   >
-                    <div
-                      style={{ display: "block" }}
-                      className="content-wrapper col-md-7"
-                    >
+                    <div className="content-wrapper col-md-7 div-img">
                       <a
                         target="_blank"
                         style={{ fontSize: "13px" }}
@@ -202,7 +200,7 @@ const HomeComponent = () => {
                         https://www.facebook.com/FanStreamCol
                       </a>
                       <img
-                        style={{ width: "87%" }}
+                        style={{ width: "80%" }}
                         src="/images/img1.png"
                         alt="img"
                       />

@@ -1,3 +1,13 @@
+/* HomePage */
+.div-img {
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  .div-img {
+    display: contents;
+  }
+}
 /* AdminPage */
 .admin-endpoints {
   padding: 2rem;
