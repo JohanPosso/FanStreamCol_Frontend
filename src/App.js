@@ -57,6 +57,7 @@ function AppContent() {
         {/* <Route path="/home" element={<HomeComponent />} />    Normalmente es asi */}
         {/* Se agrego como ruta principal mientras esta en prueba */}
         <Route path="/" element={<HomeComponent />} />{" "}
+          <Route path="/home" element={<HomeComponent />} />{" "}
       </Routes>
     </div>
   );
