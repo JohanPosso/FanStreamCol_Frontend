@@ -34,9 +34,10 @@ const AdminEndpoints = () => {
       route: "/upload-video",
     },
     {
-      title: "Configuraciones",
-      description: "Ajusta las configuraciones del sistema.",
-      route: "/settings",
+      title: "Subir archivo a una categoria",
+      description:
+        "Permite subir fotos y/o videos a una categoria en especifico",
+      route: "/uploadcatg-files",
     },
     {
       title: "Historial",

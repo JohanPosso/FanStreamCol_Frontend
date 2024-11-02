@@ -18,7 +18,7 @@ export default function TemplateDemo() {
 
   useEffect(() => {
     axios
-      .get(`${apiUrl}/modelo`)
+      .get(`${apiUrl}/categories`)
       .then((response) => {
         setUsers(response.data);
       })
@@ -40,15 +40,14 @@ export default function TemplateDemo() {
 
   const handleUpload = async ({ files }) => {
     if (!selectedUser) return;
-
     const formData = new FormData();
     files.forEach((file) => {
       formData.append("file", file); // Permite múltiples archivos
     });
-    formData.append("modeloId", selectedUser);
+    formData.append("categoryName", selectedUser.label);
 
     try {
-      await axios.post(`${apiUrl}/upload-photo`, formData, {
+      await axios.post(`${apiUrl}/upload-categophoto`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

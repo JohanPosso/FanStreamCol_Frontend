@@ -21,6 +21,7 @@ import VideoView from "./components/VideoView";
 import CategoryPage from "./components/CategoryPage";
 import CategoriesDemo from "./components/CategoryList";
 import VideoUpload from "./components/UploadVideo";
+import UploadCatePhotoVideo from "./components/UploadCategoPhotos";
 // Importaciones de PrimeReact
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -36,7 +37,7 @@ function AppContent() {
       {<HeaderComponent />}
       <Routes>
         {/* Ruta de login */}
-        {/* <Route path="/" element={<LoginComponent />} /> */}
+        <Route path="/login" element={<LoginComponent />} />
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<AdminEndpoints />} />
           <Route path="/view-model" element={<ProductsDemo />} />
@@ -45,19 +46,21 @@ function AppContent() {
           <Route path="/users" element={<UserTlabe />} />
           <Route path="/categories" element={<CategoriesDemo />} />
           <Route path="/upload-video" element={<VideoUpload />} />
+          <Route
+            path="/uploadcatg-files"
+            element={<UploadCatePhotoVideo />}
+          />{" "}
         </Route>
         {/* Ruta de home, accesible para usuarios */}
-        <Route element={<UserRoute />}>
-          
-        </Route>
+        <Route element={<UserRoute />}></Route>
         {/* Ruta de home, accesible para todos */}
-          <Route path="/category/:id" element={<CategoryPage />} />
-          <Route path="/profile/:id" element={<ProfileComponent />} />
+        <Route path="/category/:id" element={<CategoryPage />} />
+        <Route path="/profile/:id" element={<ProfileComponent />} />
         <Route path="/video/:videoId" element={<VideoView />} />
         {/* <Route path="/home" element={<HomeComponent />} />    Normalmente es asi */}
         {/* Se agrego como ruta principal mientras esta en prueba */}
         <Route path="/" element={<HomeComponent />} />{" "}
-          <Route path="/home" element={<HomeComponent />} />{" "}
+        <Route path="/home" element={<HomeComponent />} />{" "}
       </Routes>
     </div>
   );
