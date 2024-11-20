@@ -99,7 +99,7 @@ export default function VideoUpload() {
     return (
       <div className="flex align-items-center flex-wrap">
         <div className="flex align-items-center" style={{ width: "40%" }}>
-          <video width={100} controls>
+          <video width={100} controls preload="auto">
             <source src={file.objectURL} type={file.type} />
           </video>
           <span className="flex flex-column text-left ml-3">

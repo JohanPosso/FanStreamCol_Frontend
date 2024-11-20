@@ -57,7 +57,6 @@ const CategoryGallery = () => {
 
   return (
     <div className="category-gallery">
-      <h2 className="category-title">Galería de Categoría</h2>
       <div className="media-grid">
         {mediaItems.map((item) => (
           <div className="media-item" key={item.id_photo}>
