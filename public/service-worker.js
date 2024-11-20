@@ -1,4 +1,4 @@
-const CACHE_NAME = "media-cache-v1"; // Nombre del caché, puedes cambiar la versión si es necesario
+const CACHE_NAME = "media-cache-v2"; // Nombre del caché, puedes cambiar la versión si es necesario
 
 // Listado de extensiones de archivo que deseas cachear
 const FILE_EXTENSIONS = [".mp4", ".mov", ".avi", ".jpg", ".jpeg", ".png"];

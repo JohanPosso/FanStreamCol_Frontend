@@ -172,6 +172,13 @@ const ProfileComponent = () => {
                           width="100%"
                           height="100%"
                           controls
+                          config={{
+                            file: {
+                              attributes: {
+                                preload: "metadata",
+                              },
+                            },
+                          }}
                         />
                       </div>
                     ) : (

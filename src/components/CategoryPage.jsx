@@ -67,6 +67,13 @@ const CategoryGallery = () => {
                 width="100%"
                 height="100%"
                 className="media-content"
+                config={{
+                  file: {
+                    attributes: {
+                      preload: "metadata",
+                    },
+                  },
+                }}
               />
             ) : (
               <img
