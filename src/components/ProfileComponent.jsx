@@ -1,54 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 import ReactPlayer from "react-player";
+import { Skeleton } from "primereact/skeleton";
+import { Button } from "primereact/button";
+import axios from "axios";
 import "./ProfileComponent.css";
-import { Button } from "primereact/button"; // Importa el componente Button de PrimeReact
+
+const fetchProfileData = async (apiUrl) => {
+  const response = await axios.get(`${apiUrl}/modelo`);
+  return response.data;
+};
+
+const fetchMediaFiles = async (apiUrl, id) => {
+  const response = await axios.get(`${apiUrl}/${id}/photos`);
+  return response.data;
+};
 
 const ProfileComponent = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { id } = useParams();
-  const [profileData, setProfileData] = useState(null);
-  const [mediaFiles, setMediaFiles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+
+  const [filter, setFilter] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [filter, setFilter] = useState("all");
 
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get(`${apiUrl}/modelo`)
-      .then((response) => {
-        setProfileData(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error al cargar el perfil:", error);
-        setError("Failed to load profile data.");
-        setLoading(false);
-      });
-  }, [apiUrl]);
+  const {
+    data: profileData,
+    isLoading: profileLoading,
+    error: profileError,
+  } = useQuery({
+    queryKey: ["profileData"],
+    queryFn: () => fetchProfileData(apiUrl),
+  });
 
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get(`${apiUrl}/${id}/photos`)
-      .then((response) => {
-        setMediaFiles(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error al cargar las fotos:", error);
-        setError("Failed to load media files.");
-        setLoading(false);
-      });
-  }, [id]);
+  const {
+    data: mediaFiles,
+    isLoading: mediaLoading,
+    error: mediaError,
+  } = useQuery({
+    queryKey: ["mediaFiles", id],
+    queryFn: () => fetchMediaFiles(apiUrl, id),
+    enabled: !!id,
+  });
 
-  const user = profileData
-    ? profileData.find((e) => e.id === Number(id))
-    : null;
+  const user = profileData?.find((e) => e.id === Number(id));
 
   const isVideoFile = (file) => {
     const videoExtensions = [".mp4", ".mov", ".avi", ".mkv"];
@@ -62,9 +58,7 @@ const ProfileComponent = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeModal = () => setIsModalOpen(false);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -78,141 +72,116 @@ const ProfileComponent = () => {
     );
   };
 
-  const filteredMediaFiles = mediaFiles.filter((media) => {
-    if (filter === "photos") {
-      return !isVideoFile(media);
-    }
-    if (filter === "videos") {
-      return isVideoFile(media);
-    }
-    return true; // Para 'all'
+  const filteredMediaFiles = mediaFiles?.filter((media) => {
+    if (filter === "photos") return !isVideoFile(media);
+    if (filter === "videos") return isVideoFile(media);
+    return true;
   });
+
+  if (profileError || mediaError) {
+    return <p>Error: {profileError?.message || mediaError?.message}</p>;
+  }
 
   return (
     <div className="container-profile">
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      {profileData && user && (
-        <>
-          <div className="profile-header">
-            <div className="profile-picture">
-              <img
-                className="profile-picture"
-                src={`${user.avatar}`}
-                alt="Perfil"
+      {profileLoading || mediaLoading ? (
+        <div className="loading-container">
+          <Skeleton width="100%" height="200px" />
+          <Skeleton width="80%" height="30px" />
+          <Skeleton width="100%" height="150px" count={6} />
+        </div>
+      ) : (
+        profileData &&
+        user && (
+          <>
+            <div className="profile-header">
+              <div className="profile-picture">
+                <img
+                  className="profile-picture"
+                  src={`${user.avatar}`}
+                  alt="Perfil"
+                />
+              </div>
+              <div className="profile-info">
+                <h2>
+                  {user.name} {user.lastname}
+                </h2>
+                <div className="profile-stats">
+                  <span>{mediaFiles.length} posts</span>
+                  <span>25.3M followers</span>
+                  <span>3,757 Likes</span>
+                </div>
+                <div className="profile-bio">
+                  <button className="btn btn-primary">Likes</button>
+                  <p>{user.instagram}</p>
+                  <div className="profile-links">
+                    <a
+                      href={user.otraredsocial}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {user.otraredsocial}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="tabs">
+              <Button
+                style={{ border: "none", background: "none" }}
+                label="All"
+                className={`filter-button ${
+                  filter === "all" ? "active" : ""
+                } btn`}
+                onClick={() => setFilter("all")}
+              />
+              <Button
+                style={{ border: "none", background: "none" }}
+                label="Photos"
+                className={`filter-button ${
+                  filter === "photos" ? "active" : ""
+                } btn`}
+                onClick={() => setFilter("photos")}
+              />
+              <Button
+                style={{ border: "none", background: "none" }}
+                label="Videos"
+                className={`filter-button ${
+                  filter === "videos" ? "active" : ""
+                } btn`}
+                onClick={() => setFilter("videos")}
               />
             </div>
-            <div className="profile-info">
-              <h2>
-                {user.name} {user.lastname}
-              </h2>
-              <div className="profile-stats">
-                <span>{mediaFiles.length} posts</span>
-                <span>25.3M followers</span>
-                <span>3,757 Likes</span>
-              </div>
-              <div className="profile-bio">
-                <button className="btn btn-primary">Likes</button>
-                <p>{user.instagram}</p>
-                <div className="profile-links">
-                  <a
-                    href={user.otraredsocial}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {user.otraredsocial}
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="tabs">
-            {/* Usando componentes de PrimeReact para botones */}
-            <Button
-              label="All"
-              style={{ background: "none" }}
-              className={`filter-button ${
-                filter === "all" ? "active" : ""
-              } btn`}
-              onClick={() => setFilter("all")}
-            />
-            <Button
-              label="Photos"
-              style={{ background: "none" }}
-              className={`filter-button ${
-                filter === "photos" ? "active" : ""
-              } btn`}
-              onClick={() => setFilter("photos")}
-            />
-            <Button
-              label="Videos"
-              style={{ background: "none" }}
-              className={`filter-button ${
-                filter === "videos" ? "active" : ""
-              } btn`}
-              onClick={() => setFilter("videos")}
-            />
-          </div>
-          <div className="post-grid">
-            {filteredMediaFiles.length === 0 ? (
-              <p>No media files available.</p>
-            ) : (
-              filteredMediaFiles.map((media, index) => (
-                <div className="media-container" key={index}>
-                  {isVideoFile(media) ? (
-                    <div className="video-wrapper">
-                      <ReactPlayer
-                        url={media.ph_reference}
-                        className="post-video"
-                        width="100%"
-                        height="100%"
-                        controls
+            <div className="post-grid">
+              {filteredMediaFiles?.length === 0 ? (
+                <p>No media files available.</p>
+              ) : (
+                filteredMediaFiles.map((media, index) => (
+                  <div className="media-container" key={index}>
+                    {isVideoFile(media) ? (
+                      <div className="video-wrapper">
+                        <ReactPlayer
+                          url={media.ph_reference}
+                          className="post-video"
+                          width="100%"
+                          height="100%"
+                          controls
+                        />
+                      </div>
+                    ) : (
+                      <img
+                        src={media.ph_reference}
+                        alt={`Post ${index + 1}`}
+                        className="post-image"
+                        onClick={() => openModal(index)}
                       />
-                    </div>
-                  ) : (
-                    <img
-                      src={media.ph_reference}
-                      alt={`Post ${index + 1}`}
-                      className="post-image"
-                      onClick={() => openModal(index)}
-                    />
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-          {isModalOpen && (
-            <div className="modal" onClick={closeModal}>
-              <div
-                className="modal-content"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <img
-                  src={filteredMediaFiles[currentImageIndex].ph_reference}
-                  alt={`Post ${currentImageIndex + 1}`}
-                  className="modal-image"
-                />
-                <div className="modal-controls">
-                  <Button
-                    label="Prev"
-                    onClick={prevImage}
-                    className="modal-button"
-                  />
-                  <Button
-                    label="Next"
-                    onClick={nextImage}
-                    className="modal-button"
-                  />
-                  <Button
-                    label="Close"
-                    onClick={closeModal}
-                    className="close-button"
-                  />
-                </div>
-              </div>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
-          )}
-        </>
+          </>
+        )
       )}
     </div>
   );

@@ -1,18 +1,83 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query"; // Importar useQuery desde react-query
+import axios from "axios";
+import { Skeleton } from "primereact/skeleton"; // Importar Skeleton desde primereact
+
+// Función para obtener los modelos
+const fetchModels = async () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const response = await axios.get(`${apiUrl}/modelo`);
+  return response.data; // Retornar los datos obtenidos
+};
 
 const CardComponent = () => {
-  const apiUrl = process.env.REACT_APP_API_URL;
-  const [data, setData] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get(`${apiUrl}/modelo`)
-      .then((response) => setData(response.data))
-      .catch((error) => console.error("Error al cargar usuarios:", error));
-  }, [apiUrl]);
+  // Usar useQuery para obtener los modelos desde la API
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["models"],
+    queryFn: fetchModels, // Función para obtener los datos
+    retry: false, // Evitar reintentos automáticos en caso de error
+  });
+
+  if (isLoading) {
+    return (
+      <section className="py-5">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-12">
+              <div className="bootstrap-tabs product-tabs">
+                <div className="tabs-header d-flex justify-content-between border-bottom my-5">
+                  <h3>Destacados</h3>
+                </div>
+                <div className="tab-content" id="nav-tabContent">
+                  <div
+                    className="tab-pane fade show active"
+                    id="nav-all"
+                    role="tabpanel"
+                    aria-labelledby="nav-all-tab"
+                  >
+                    <div className="product-grid">
+                      {[...Array(6)].map((_, index) => (
+                        <div key={index} className="product-item">
+                          <Skeleton
+                            width="100%"
+                            height="200px"
+                            className="tab-image"
+                          />
+                          <Skeleton
+                            width="60%"
+                            height="20px"
+                            className="product-name"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-5">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-12">
+              <h3>Error al cargar los modelos</h3>
+              <div>{error.message}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-5">
@@ -38,7 +103,7 @@ const CardComponent = () => {
                         onClick={() => navigate(`/profile/${item.id}`)}
                       >
                         <img
-                          src={`${item.avatar}`}
+                          src={item.avatar}
                           className="tab-image"
                           alt={item.name}
                         />
@@ -54,7 +119,6 @@ const CardComponent = () => {
           </div>
         </div>
       </div>
-
       <style jsx>{`
         .product-grid {
           display: grid;

@@ -30,7 +30,6 @@ const HomeComponent = () => {
     <div>
       <section
         className="py-3"
-        // style="background-image: url('images/background-pattern.jpg');background-repeat: no-repeat;background-size: cover;"
         style={{
           backgroundImage:
             "url('/onlycol/public/images/background-pattern.jpg')",
@@ -64,31 +63,6 @@ const HomeComponent = () => {
                       aria-label="Close"
                     ></button>
                   </div>
-
-                  {/* <div className="offcanvas-body">
-                    <ul className="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                      <li className="nav-item active">
-                        <a href="#women" className="nav-link">
-                          Women
-                        </a>
-                      </li>
-                      <li className="nav-item dropdown">
-                        <a href="#men" className="nav-link">
-                          Men
-                        </a>
-                      </li>
-                      <li className="nav-item">
-                        <a href="#kids" className="nav-link">
-                          Kids
-                        </a>
-                      </li>
-                      <li className="nav-item">
-                        <a href="#accessories" className="nav-link">
-                          Accessories
-                        </a>
-                      </li>
-                    </ul>
-                  </div> */}
                 </div>
               </nav>
             </div>
@@ -138,8 +112,6 @@ const HomeComponent = () => {
                       "url('/onlycol/public/images/images/ad-image-1.png')",
                     overflow: "hidden",
                   }}
-
-                  // style="background:url('images/ad-image-1.png') no-repeat;background-position: right bottom
                 >
                   <div
                     style={{ maxHeight: "100px" }}
@@ -176,7 +148,6 @@ const HomeComponent = () => {
                   style={{
                     overflow: "hidden",
                   }}
-                  // style="background:url('images/ad-image-2.png') no-repeat;background-position: right bottom"
                 >
                   <div
                     style={{ maxHeight: "100px" }}
