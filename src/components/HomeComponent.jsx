@@ -4,7 +4,6 @@ import { Carousel } from "primereact/carousel";
 import { useQuery } from "@tanstack/react-query"; // Importa useQuery de la versión 5
 import CardComponent from "./CardComponent";
 import axios from "axios";
-
 import { ProgressSpinner } from "primereact/progressspinner";
 
 const HomeComponent = () => {

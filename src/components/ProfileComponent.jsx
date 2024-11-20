@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import ReactPlayer from "react-player";
-import { Skeleton } from "primereact/skeleton";
+import { ProgressSpinner } from "primereact/progressspinner"; // Importamos ProgressSpinner de PrimeReact
 import { Button } from "primereact/button";
 import axios from "axios";
 import "./ProfileComponent.css";
@@ -86,9 +86,11 @@ const ProfileComponent = () => {
     <div className="container-profile">
       {profileLoading || mediaLoading ? (
         <div className="loading-container">
-          <Skeleton width="100%" height="200px" />
-          <Skeleton width="80%" height="30px" />
-          <Skeleton width="100%" height="150px" count={6} />
+          <ProgressSpinner
+            style={{ width: "50px", height: "50px" }}
+            strokeWidth="4"
+            fill="transparent"
+          />
         </div>
       ) : (
         profileData &&

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query"; // Importamos useQuery de React Query
 import axios from "axios";
 import ReactPlayer from "react-player";
-import { Skeleton } from "primereact/skeleton"; // Importamos Skeleton de PrimeReact
+import { ProgressSpinner } from "primereact/progressspinner"; // Importamos ProgressSpinner de PrimeReact
 
 // Función para obtener las fotos de la categoría
 const fetchCategoryPhotos = async (id) => {
@@ -31,10 +31,14 @@ const CategoryGallery = () => {
       <div className="category-gallery">
         <h2 className="category-title">Cargando...</h2>
         <div className="media-grid">
-          {/* Skeleton Loading para cada item de la galería */}
+          {/* ProgressSpinner cargando */}
           {[...Array(6)].map((_, index) => (
             <div className="media-item" key={index}>
-              <Skeleton width="100%" height="200px" className="media-content" />
+              <ProgressSpinner
+                style={{ width: "50px", height: "50px" }}
+                strokeWidth="4"
+                fill="transparent"
+              />
             </div>
           ))}
         </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query"; // Importar useQuery desde react-query
 import axios from "axios";
-import { Skeleton } from "primereact/skeleton"; // Importar Skeleton desde primereact
+import { ProgressSpinner } from "primereact/progressspinner"; // Importar ProgressSpinner desde primereact
 
 // Función para obtener los modelos
 const fetchModels = async () => {
@@ -39,20 +39,13 @@ const CardComponent = () => {
                     aria-labelledby="nav-all-tab"
                   >
                     <div className="product-grid">
-                      {[...Array(6)].map((_, index) => (
-                        <div key={index} className="product-item">
-                          <Skeleton
-                            width="100%"
-                            height="200px"
-                            className="tab-image"
-                          />
-                          <Skeleton
-                            width="60%"
-                            height="20px"
-                            className="product-name"
-                          />
-                        </div>
-                      ))}
+                      <div className="product-item">
+                        <ProgressSpinner
+                          style={{ width: "50px", height: "50px" }}
+                          strokeWidth="8"
+                          animationDuration="1s"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
