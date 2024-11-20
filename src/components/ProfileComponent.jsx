@@ -16,7 +16,7 @@ const fetchProfileData = async (apiUrl) => {
 // Función para cargar los archivos multimedia
 const fetchMediaFiles = async (apiUrl, id) => {
   const response = await axios.get(`${apiUrl}/${id}/photos`);
-  return response.data;
+  return response.data.reverse();
 };
 
 const ProfileComponent = () => {

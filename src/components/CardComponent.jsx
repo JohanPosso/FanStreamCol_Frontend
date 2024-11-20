@@ -8,7 +8,7 @@ import { ProgressSpinner } from "primereact/progressspinner"; // Importar Progre
 const fetchModels = async () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const response = await axios.get(`${apiUrl}/modelo`);
-  return response.data; // Retornar los datos obtenidos
+  return response.data.reverse(); // Retornar los datos obtenidos
 };
 
 const CardComponent = () => {

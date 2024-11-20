@@ -10,7 +10,7 @@ const fetchCategoryPhotos = async (id) => {
   const response = await axios.get(
     `${process.env.REACT_APP_API_URL}/photos-categories/${id}`
   );
-  return response.data; // Devuelve los datos
+  return response.data.reverse(); // Devuelve los datos
 };
 
 const CategoryGallery = () => {
