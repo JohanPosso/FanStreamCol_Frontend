@@ -132,7 +132,7 @@ export default function TemplateDemo() {
             />
           )}
           {isVideo && (
-            <video width={100} controls preload="auto">
+            <video width={100} controls preload="metadata">
               <source src={file.objectURL} type={file.type} />
             </video>
           )}

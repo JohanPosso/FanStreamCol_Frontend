@@ -7,11 +7,13 @@ import { Button } from "primereact/button";
 import axios from "axios";
 import "./ProfileComponent.css";
 
+// Función para cargar los datos del perfil
 const fetchProfileData = async (apiUrl) => {
   const response = await axios.get(`${apiUrl}/modelo`);
   return response.data;
 };
 
+// Función para cargar los archivos multimedia
 const fetchMediaFiles = async (apiUrl, id) => {
   const response = await axios.get(`${apiUrl}/${id}/photos`);
   return response.data;
@@ -25,6 +27,7 @@ const ProfileComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  // Cargar datos del perfil usando React Query
   const {
     data: profileData,
     isLoading: profileLoading,
@@ -34,6 +37,7 @@ const ProfileComponent = () => {
     queryFn: () => fetchProfileData(apiUrl),
   });
 
+  // Cargar archivos multimedia
   const {
     data: mediaFiles,
     isLoading: mediaLoading,

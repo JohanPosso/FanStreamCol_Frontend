@@ -8,6 +8,19 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 // Crear instancia de QueryClient
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then((registration) => {
+        return registration;
+      })
+      .catch((error) => {
+        console.log("Error al registrar el Service Worker:", error);
+      });
+  });
+}
+
 const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -15,12 +28,10 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <React.StrictMode>
       <UserProvider>
-        {" "}
-        {}
         <App />
       </UserProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
     </React.StrictMode>
+    <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 );
 
