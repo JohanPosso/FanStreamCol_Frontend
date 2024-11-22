@@ -2,18 +2,16 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import ReactPlayer from "react-player";
-import { ProgressSpinner } from "primereact/progressspinner"; // Importamos ProgressSpinner de PrimeReact
+import { ProgressSpinner } from "primereact/progressspinner";
 import { Button } from "primereact/button";
 import axios from "axios";
 import "./ProfileComponent.css";
 
-// Función para cargar los datos del perfil
 const fetchProfileData = async (apiUrl) => {
   const response = await axios.get(`${apiUrl}/modelo`);
   return response.data;
 };
 
-// Función para cargar los archivos multimedia
 const fetchMediaFiles = async (apiUrl, id) => {
   const response = await axios.get(`${apiUrl}/${id}/photos`);
   return response.data.reverse();
@@ -27,7 +25,6 @@ const ProfileComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Cargar datos del perfil usando React Query
   const {
     data: profileData,
     isLoading: profileLoading,
@@ -37,7 +34,6 @@ const ProfileComponent = () => {
     queryFn: () => fetchProfileData(apiUrl),
   });
 
-  // Cargar archivos multimedia
   const {
     data: mediaFiles,
     isLoading: mediaLoading,
@@ -76,10 +72,16 @@ const ProfileComponent = () => {
     );
   };
 
+  const handleClickOutside = (e) => {
+    if (e.target.classList.contains("modal")) {
+      closeModal();
+    }
+  };
+
   const filteredMediaFiles = mediaFiles?.filter((media) => {
-    if (filter === "photos") return !isVideoFile(media);
-    if (filter === "videos") return isVideoFile(media);
-    return true;
+    if (filter === "photos") return !isVideoFile(media); // Filtrar fotos
+    if (filter === "videos") return isVideoFile(media); // Filtrar videos
+    return true; // Sin filtro
   });
 
   if (profileError || mediaError) {
@@ -193,6 +195,28 @@ const ProfileComponent = () => {
                 ))
               )}
             </div>
+            {isModalOpen && (
+              <div className="modal open" onClick={handleClickOutside}>
+                <div className="modal-content">
+                  <div className="modal-buttons">
+                    <i
+                      className="pi pi-chevron-left prev-btn"
+                      onClick={prevImage}
+                    />
+                    <i
+                      className="pi pi-chevron-right next-btn"
+                      onClick={nextImage}
+                    />
+                  </div>
+
+                  <img
+                    src={filteredMediaFiles[currentImageIndex]?.ph_reference}
+                    alt={`Post ${currentImageIndex + 1}`}
+                    className="modal-image"
+                  />
+                </div>
+              </div>
+            )}
           </>
         )
       )}
